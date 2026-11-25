@@ -215,10 +215,14 @@
       },
       "tags": {
         "zh": [
-          "Live2D"
+          "Live2D",
+          "模型制作",
+          "全流程"
         ],
         "en": [
-          "Live2D"
+          "Live2D",
+          "design",
+          "modelling"
         ]
       }
     },
