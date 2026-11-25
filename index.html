@@ -976,8 +976,46 @@
 
     .media-filters {
       display: flex;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 8px;
     }
+
+    .sort-toggle-btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all var(--transition);
+    }
+
+    .sort-toggle-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .sort-toggle-btn svg {
+      width: 15px;
+      height: 15px;
+      display: block;
+    }
+
+    .sort-arrow-up, .sort-arrow-down {
+      transition: opacity 0.2s ease, stroke 0.2s ease;
+    }
+
+    /* 默认最新在上(desc)：右侧向下(由新到旧)高亮或双箭头清晰区分 */
+    .sort-toggle-btn[data-order="desc"] .sort-arrow-down { stroke: var(--accent); opacity: 1; }
+    .sort-toggle-btn[data-order="desc"] .sort-arrow-up { stroke: var(--text-muted); opacity: 0.5; }
+    .sort-toggle-btn[data-order="asc"] .sort-arrow-up { stroke: var(--accent); opacity: 1; }
+    .sort-toggle-btn[data-order="asc"] .sort-arrow-down { stroke: var(--text-muted); opacity: 0.5; }
 
     .filter-chip {
       background: var(--bg-surface);
@@ -1621,11 +1659,24 @@
         <!-- 面包屑路径导航（无文件夹icon） -->
         <div class="breadcrumb-bar" id="breadcrumb-bar"></div>
 
-        <!-- 媒体类型筛选 -->
+        <!-- 媒体类型筛选与时间排序 -->
         <div class="media-filters">
           <button class="filter-chip active" id="filter-all" onclick="setMediaFilter('all', this)">全部作品</button>
           <button class="filter-chip" id="filter-video" onclick="setMediaFilter('video', this)">视频作品</button>
           <button class="filter-chip" id="filter-image" onclick="setMediaFilter('image', this)">图片作品</button>
+          <button class="sort-toggle-btn" id="sort-toggle-btn" data-order="desc" onclick="toggleSortOrder()" title="切换时间排序">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <g class="sort-arrow-up">
+                <path d="M8 19V5" />
+                <path d="M4 9l4-4 4 4" />
+              </g>
+              <g class="sort-arrow-down">
+                <path d="M16 5v14" />
+                <path d="M12 15l4 4 4-4" />
+              </g>
+            </svg>
+            <span id="sort-toggle-text">最新优先</span>
+          </button>
         </div>
       </div>
 
@@ -1668,6 +1719,7 @@
     let currentLang = 'zh';
     let currentFolderId = 'root';
     let currentMediaFilter = 'all';
+    let currentSortOrder = 'desc'; // 默认时间靠后（最新）的作品在上
     let toastTimer = null;
 
     // 预留配置：待您的作品集合集链接或简历 PDF 准备好后，直接填入下方引号即可生效
@@ -1778,6 +1830,8 @@
         filterAll: '全部作品',
         filterVideo: '视频作品',
         filterImage: '图片作品',
+        sortNewest: '最新优先',
+        sortOldest: '最早优先',
         sidebarHeader: '作品目录导航',
         sidebarReset: '返回根目录',
         videoBadge: (dur) => `视频 · ${dur}`,
@@ -1889,6 +1943,8 @@
         filterAll: 'All Works',
         filterVideo: 'Videos',
         filterImage: 'Images',
+        sortNewest: 'Newest',
+        sortOldest: 'Oldest',
         sidebarHeader: 'Directory Tree',
         sidebarReset: 'Root Folder',
         videoBadge: (dur) => `Video · ${dur}`,
@@ -2421,6 +2477,7 @@
       document.getElementById('filter-all').textContent = t.filterAll;
       document.getElementById('filter-video').textContent = t.filterVideo;
       document.getElementById('filter-image').textContent = t.filterImage;
+      updateSortButtonUI();
       document.getElementById('sidebar-header-text').textContent = t.sidebarHeader;
       document.getElementById('sidebar-reset-text').textContent = t.sidebarReset;
 
@@ -2515,6 +2572,25 @@
       btnEl.classList.add('active');
       syncUrlHash();
       renderExplorer();
+    }
+
+    function updateSortButtonUI() {
+      const btn = document.getElementById('sort-toggle-btn');
+      const txt = document.getElementById('sort-toggle-text');
+      const t = i18n[currentLang];
+      if (btn) btn.setAttribute('data-order', currentSortOrder);
+      if (txt) txt.textContent = currentSortOrder === 'desc' ? t.sortNewest : t.sortOldest;
+    }
+
+    function toggleSortOrder() {
+      currentSortOrder = currentSortOrder === 'desc' ? 'asc' : 'desc';
+      updateSortButtonUI();
+      renderExplorer();
+    }
+
+    function parseYearNum(yearVal) {
+      const m = String(yearVal || '').match(/\d{4}/);
+      return m ? parseInt(m[0], 10) : 0;
     }
 
     // 递归获取文件夹下的作品列表
@@ -2617,6 +2693,11 @@
         if (currentMediaFilter !== 'all') {
           items = items.filter(i => i.type === currentMediaFilter);
         }
+        items = items.slice().sort((a, b) => {
+          const ya = parseYearNum(a.year);
+          const yb = parseYearNum(b.year);
+          return currentSortOrder === 'desc' ? (yb - ya) : (ya - yb);
+        });
 
         if (items.length > 0) {
           const worksHTML = items.map(item => {

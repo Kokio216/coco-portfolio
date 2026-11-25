@@ -150,6 +150,53 @@
       display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px;
     }
     .crop-slider-item input[type="range"] { width: 100%; accent-color: var(--accent); }
+    .folder-drop-root {
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      border: 1.5px dashed var(--border);
+      border-radius: 10px;
+      font-size: 0.84rem;
+      color: var(--muted);
+      background: var(--bg);
+      transition: all 0.2s;
+    }
+    .folder-drop-root.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+    .folder-tree-row {
+      background: var(--elevated);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: grab;
+      transition: border-color 0.18s, background 0.18s, transform 0.18s;
+    }
+    .folder-tree-row:active { cursor: grabbing; }
+    .folder-tree-row.dragging { opacity: 0.45; }
+    .folder-tree-row.drag-over {
+      border: 2px dashed var(--accent);
+      background: var(--accent-soft);
+      transform: translateX(4px);
+    }
+    .drag-grip {
+      color: var(--muted);
+      font-size: 1rem;
+      letter-spacing: -2px;
+      user-select: none;
+      padding-right: 4px;
+    }
+    .btn-mini {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+      border-radius: 7px;
+    }
     @media (max-width: 760px) {
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
@@ -323,18 +370,19 @@
       <!-- Tab 2: 文件夹管理 -->
       <section id="panel-folders" class="panel">
         <div class="card">
-          <h2>新增子文件夹（新增后前台与后台会自动同步）</h2>
+          <h2 id="folder-form-title">新增 / 编辑文件夹（修改后前台与后台自动同步）</h2>
+          <input type="hidden" id="f-edit-id" />
           <div class="grid-3">
             <div class="field">
               <label>上级文件夹</label>
               <select id="f-parent"></select>
             </div>
             <div class="field">
-              <label>新文件夹名称（中文）</label>
+              <label>文件夹名称（中文）</label>
               <input id="f-name-zh" type="text" placeholder="例如：UI与道具" />
             </div>
             <div class="field">
-              <label>新文件夹名称（英文）</label>
+              <label>文件夹名称（英文）</label>
               <input id="f-name-en" type="text" placeholder="e.g. UI & Props" />
             </div>
           </div>
@@ -348,11 +396,21 @@
               <input id="f-desc-en" type="text" placeholder="Brief English description" />
             </div>
           </div>
-          <button class="btn btn-primary" onclick="addFolder()">新增文件夹</button>
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary" id="f-submit-btn" onclick="saveFolderForm()">新增文件夹</button>
+            <button class="btn" onclick="resetFolderForm()">清空 / 取消编辑</button>
+          </div>
         </div>
 
         <div class="card">
-          <h2>当前所有文件夹结构</h2>
+          <h2>当前文件夹结构（支持像系统文件夹一样直接拖拽移动）</h2>
+          <p class="hint">按住任意文件夹拖到另一个文件夹上方松手，即可把它（连同里面的子文件夹）移进去；也可以拖到下方虚线框移回最外层“根目录”，或点 ↑ ↓ 调整同级顺序。</p>
+          <div id="folder-drop-root" class="folder-drop-root"
+               ondragover="onFolderDragOver(event, 'root', this)"
+               ondragleave="onFolderDragLeave(this)"
+               ondrop="onFolderDrop(event, 'root', this)">
+            将文件夹拖到此处，即可移回最外层「根目录」
+          </div>
           <div id="folders-list"></div>
         </div>
       </section>
@@ -548,19 +606,26 @@
 
     function renderAll() {
       if (!siteData) return;
+      // 按真实树状层级（递归遍历 children）排序并修正所有 depth，彻底杜绝子文件夹显示错位
+      recomputeFolderDepths();
+      const orderedFolders = getOrderedFolders();
+
       // 填充文件夹下拉选项
       const folderSelect = document.getElementById('w-folder');
       const parentSelect = document.getElementById('f-parent');
-      const folderEntries = Object.values(siteData.folders);
+      const prevWFolder = folderSelect.value;
+      const prevFParent = parentSelect.value;
 
-      folderSelect.innerHTML = folderEntries
+      folderSelect.innerHTML = orderedFolders
         .filter(f => f.id !== 'root')
-        .map(f => `<option value="${f.id}">${'　'.repeat(Math.max(0, f.depth - 1))}${f.name.zh} (${f.name.en})</option>`)
+        .map(f => `<option value="${f.id}">${'　'.repeat(Math.max(0, f.depth - 1))}${f.depth > 1 ? '└ ' : ''}${f.name.zh} (${f.name.en})</option>`)
         .join('');
+      if (prevWFolder && siteData.folders[prevWFolder]) folderSelect.value = prevWFolder;
 
-      parentSelect.innerHTML = folderEntries
-        .map(f => `<option value="${f.id}">${'　'.repeat(f.depth)}${f.name.zh}</option>`)
+      parentSelect.innerHTML = orderedFolders
+        .map(f => `<option value="${f.id}">${'　'.repeat(f.depth)}${f.depth > 0 ? '└ ' : ''}${f.name.zh}</option>`)
         .join('');
+      if (prevFParent && siteData.folders[prevFParent]) parentSelect.value = prevFParent;
 
       // 填充作品列表
       const worksEl = document.getElementById('works-list');
@@ -589,19 +654,41 @@
         `;
       }).join('');
 
-      // 填充文件夹列表
+      // 填充树状可拖拽文件夹列表（按真实层级缩进排列）
       const foldersEl = document.getElementById('folders-list');
-      foldersEl.innerHTML = folderEntries
+      foldersEl.innerHTML = orderedFolders
         .filter(f => f.id !== 'root')
-        .map(f => `
-          <div class="item-row">
-            <div>
-              <div style="font-weight:700;">${'— '.repeat(Math.max(0, f.depth - 1))}${f.name.zh} <span style="color:var(--muted);font-weight:400;">(${f.name.en})</span></div>
-              <div style="font-size:0.8rem;color:var(--muted);">${f.desc.zh}</div>
+        .map(f => {
+          const indentPx = Math.max(0, f.depth - 1) * 28;
+          const parentName = siteData.folders[f.parent]?.name?.zh || '根目录';
+          return `
+            <div class="folder-tree-row"
+                 style="margin-left:${indentPx}px;"
+                 draggable="true"
+                 ondragstart="onFolderDragStart(event, '${f.id}', this)"
+                 ondragend="onFolderDragEnd(this)"
+                 ondragover="onFolderDragOver(event, '${f.id}', this)"
+                 ondragleave="onFolderDragLeave(this)"
+                 ondrop="onFolderDrop(event, '${f.id}', this)">
+              <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:180px;">
+                <span class="drag-grip" title="按住拖动到其他文件夹">⋮⋮</span>
+                <div>
+                  <div style="font-weight:700;font-size:0.94rem;">
+                    ${f.depth > 1 ? '<span style="color:var(--accent);margin-right:4px;">└</span>' : ''}${f.name.zh}
+                    <span style="color:var(--muted);font-weight:400;font-size:0.82rem;">(${f.name.en})</span>
+                  </div>
+                  <div style="font-size:0.78rem;color:var(--muted);">上级：${parentName}${f.desc?.zh ? ' · ' + f.desc.zh : ''}</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button class="btn btn-mini" onclick="moveFolderOrder('${f.id}', -1)" title="上移">↑</button>
+                <button class="btn btn-mini" onclick="moveFolderOrder('${f.id}', 1)" title="下移">↓</button>
+                <button class="btn btn-mini" onclick="editFolder('${f.id}')">编辑</button>
+                <button class="btn btn-mini btn-danger" onclick="deleteFolder('${f.id}')">删除</button>
+              </div>
             </div>
-            <button class="btn btn-danger" onclick="deleteFolder('${f.id}')">删除</button>
-          </div>
-        `).join('');
+          `;
+        }).join('');
 
       // 填充首页快捷链接
       document.getElementById('link-showreel').value = siteData.showreelUrl || '';
@@ -773,27 +860,172 @@
       frame.addEventListener('pointercancel', () => { dragging = false; });
     })();
 
-    function addFolder() {
-      const parentId = document.getElementById('f-parent').value;
+    let draggedFolderId = null;
+
+    function recomputeFolderDepths() {
+      if (!siteData || !siteData.folders || !siteData.folders.root) return;
+      const visited = new Set();
+      function walk(id, depth, parentId) {
+        const f = siteData.folders[id];
+        if (!f || visited.has(id)) return;
+        visited.add(id);
+        f.depth = depth;
+        f.parent = parentId;
+        f.children = (f.children || []).filter(cid => siteData.folders[cid] && cid !== id);
+        f.children.forEach(cid => walk(cid, depth + 1, id));
+      }
+      walk('root', 0, null);
+    }
+
+    function getOrderedFolders() {
+      const list = [];
+      const visited = new Set();
+      function dfs(id) {
+        const f = siteData.folders[id];
+        if (!f || visited.has(id)) return;
+        visited.add(id);
+        list.push(f);
+        (f.children || []).forEach(cid => dfs(cid));
+      }
+      dfs('root');
+      return list;
+    }
+
+    function isFolderDescendant(candidateId, ancestorId) {
+      let ptr = candidateId;
+      while (ptr) {
+        if (ptr === ancestorId) return true;
+        ptr = siteData.folders[ptr] ? siteData.folders[ptr].parent : null;
+      }
+      return false;
+    }
+
+    function moveFolderInto(folderId, newParentId) {
+      if (!folderId || !newParentId || folderId === 'root' || folderId === newParentId) return;
+      if (isFolderDescendant(newParentId, folderId)) {
+        showStatus('不能把文件夹拖进它自己的子文件夹里哦');
+        return;
+      }
+      const folder = siteData.folders[folderId];
+      const newParent = siteData.folders[newParentId];
+      if (!folder || !newParent) return;
+      if (folder.parent === newParentId) return;
+
+      const oldParent = siteData.folders[folder.parent];
+      if (oldParent && Array.isArray(oldParent.children)) {
+        oldParent.children = oldParent.children.filter(c => c !== folderId);
+      }
+      newParent.children = newParent.children || [];
+      if (!newParent.children.includes(folderId)) {
+        newParent.children.push(folderId);
+      }
+      folder.parent = newParentId;
+      recomputeFolderDepths();
+      renderAll();
+      showStatus(`已将「${folder.name.zh}」移入「${newParent.name.zh}」，记得点右上角「保存到线上网站」！`);
+    }
+
+    function onFolderDragStart(e, folderId, el) {
+      draggedFolderId = folderId;
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', folderId);
+    }
+
+    function onFolderDragEnd(el) {
+      draggedFolderId = null;
+      el.classList.remove('dragging');
+      document.querySelectorAll('.drag-over').forEach(node => node.classList.remove('drag-over'));
+    }
+
+    function onFolderDragOver(e, targetId, el) {
+      if (!draggedFolderId || draggedFolderId === targetId) return;
+      if (isFolderDescendant(targetId, draggedFolderId)) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      el.classList.add('drag-over');
+    }
+
+    function onFolderDragLeave(el) {
+      el.classList.remove('drag-over');
+    }
+
+    function onFolderDrop(e, targetId, el) {
+      e.preventDefault();
+      el.classList.remove('drag-over');
+      const sourceId = draggedFolderId || e.dataTransfer.getData('text/plain');
+      draggedFolderId = null;
+      moveFolderInto(sourceId, targetId);
+    }
+
+    function moveFolderOrder(folderId, delta) {
+      const f = siteData.folders[folderId];
+      if (!f || !f.parent || !siteData.folders[f.parent]) return;
+      const arr = siteData.folders[f.parent].children;
+      const idx = arr.indexOf(folderId);
+      const nextIdx = idx + delta;
+      if (idx < 0 || nextIdx < 0 || nextIdx >= arr.length) return;
+      [arr[idx], arr[nextIdx]] = [arr[nextIdx], arr[idx]];
+      renderAll();
+      showStatus('已调整文件夹顺序，点右上角「保存到线上网站」生效。');
+    }
+
+    function editFolder(id) {
+      const f = siteData.folders[id];
+      if (!f) return;
+      document.getElementById('f-edit-id').value = f.id;
+      document.getElementById('f-parent').value = f.parent || 'root';
+      document.getElementById('f-name-zh').value = f.name.zh || '';
+      document.getElementById('f-name-en').value = f.name.en || '';
+      document.getElementById('f-desc-zh').value = f.desc?.zh || '';
+      document.getElementById('f-desc-en').value = f.desc?.en || '';
+      document.getElementById('f-submit-btn').textContent = '保存文件夹修改';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetFolderForm() {
+      ['f-edit-id','f-name-zh','f-name-en','f-desc-zh','f-desc-en'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-submit-btn').textContent = '新增文件夹';
+    }
+
+    function saveFolderForm() {
+      const editId = document.getElementById('f-edit-id').value;
+      const parentId = document.getElementById('f-parent').value || 'root';
       const nameZh = document.getElementById('f-name-zh').value.trim();
       if (!nameZh) { showStatus('请填写文件夹中文名称'); return; }
+      const nameEn = document.getElementById('f-name-en').value.trim() || nameZh;
+      const descZh = document.getElementById('f-desc-zh').value.trim();
+      const descEn = document.getElementById('f-desc-en').value.trim() || descZh;
+
+      if (editId && siteData.folders[editId]) {
+        const f = siteData.folders[editId];
+        f.name = { zh: nameZh, en: nameEn };
+        f.desc = { zh: descZh, en: descEn };
+        if (parentId !== f.parent) {
+          moveFolderInto(editId, parentId);
+        } else {
+          renderAll();
+        }
+        resetFolderForm();
+        showStatus('文件夹已更新，记得点右上角「保存到线上网站」！');
+        return;
+      }
+
       const parent = siteData.folders[parentId];
       const newId = 'folder_' + Date.now();
       siteData.folders[newId] = {
         id: newId,
         depth: (parent.depth || 0) + 1,
         parent: parentId,
-        name: { zh: nameZh, en: document.getElementById('f-name-en').value.trim() || nameZh },
-        desc: {
-          zh: document.getElementById('f-desc-zh').value.trim(),
-          en: document.getElementById('f-desc-en').value.trim() || document.getElementById('f-desc-zh').value.trim()
-        },
+        name: { zh: nameZh, en: nameEn },
+        desc: { zh: descZh, en: descEn },
         children: []
       };
+      parent.children = parent.children || [];
       parent.children.push(newId);
-      ['f-name-zh','f-name-en','f-desc-zh','f-desc-en'].forEach(id => document.getElementById(id).value = '');
+      resetFolderForm();
       renderAll();
-      showStatus('已添加新文件夹，点右上角「保存到线上网站」即可同步！');
+      showStatus(`已将「${nameZh}」添加到「${parent.name.zh}」下，点右上角「保存到线上网站」即可同步！`);
     }
 
     function deleteFolder(id) {
@@ -803,6 +1035,7 @@
         siteData.folders[f.parent].children = siteData.folders[f.parent].children.filter(c => c !== id);
       }
       delete siteData.folders[id];
+      recomputeFolderDepths();
       renderAll();
       showStatus('已移除文件夹，点右上角「保存到线上网站」生效。');
     }
