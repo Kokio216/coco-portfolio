@@ -2,6 +2,7 @@
   "showreelUrl": "",
   "resumePdfUrl": "",
   "featuredWorkIds": [
+    "w_1795603845523",
     "w_1795603117092",
     "w_1795602256588"
   ],
@@ -191,6 +192,41 @@
     }
   },
   "items": [
+    {
+      "id": "w_1795603845523",
+      "folder": "anim-personal",
+      "type": "video",
+      "duration": "01:28",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795603740694_black_iris_phony.png",
+      "imageUrl": "",
+      "videoUrl": "【拒绝ai，全流程自制短篇动画！Black Iris: Phony】 https://www.bilibili.com/video/BV1avoJBJEzK/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "58% 47%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "Black Iris: Phony",
+        "en": "Black Iris: Phony"
+      },
+      "desc": {
+        "zh": "全流程制作。",
+        "en": "All done by me."
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "绑定",
+          "Harmony"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "Rigging",
+          "Harmony"
+        ]
+      }
+    },
     {
       "id": "w_1795603117092",
       "folder": "anim-rigging",
