@@ -2,6 +2,7 @@
   "showreelUrl": "",
   "resumePdfUrl": "",
   "featuredWorkIds": [
+    "w_1795604292322",
     "w_1795603845523",
     "w_1795603117092",
     "w_1795602256588"
@@ -41,7 +42,8 @@
         "anim-personal",
         "anim-collab",
         "anim-practice",
-        "anim-rigging"
+        "anim-rigging",
+        "folder_1795604111688"
       ]
     },
     "anim-personal": {
@@ -189,9 +191,56 @@
         "en": "Standalone illustrations, color studies, sketches, and visual experiments"
       },
       "children": []
+    },
+    "folder_1795604111688": {
+      "id": "folder_1795604111688",
+      "depth": 2,
+      "parent": "anim",
+      "name": {
+        "zh": "动态分镜",
+        "en": "Animatics"
+      },
+      "desc": {
+        "zh": "动态分镜作品，非完成动画",
+        "en": "Animatics, not polished animation"
+      },
+      "children": []
     }
   },
   "items": [
+    {
+      "id": "w_1795604292322",
+      "folder": "anim-personal",
+      "type": "video",
+      "duration": "01:57",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795604288280_black_iris.png",
+      "imageUrl": "",
+      "videoUrl": "【大二动画作业还是在画oc】 https://www.bilibili.com/video/BV1UomsBTEbg/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "Black Iris",
+        "en": "Black Iris"
+      },
+      "desc": {
+        "zh": "全流程制作。不同动画规律和走路练习。",
+        "en": "All done by me. Different animation principles and walk cycle."
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "Harmony"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "Harmony"
+        ]
+      }
+    },
     {
       "id": "w_1795603845523",
       "folder": "anim-personal",
