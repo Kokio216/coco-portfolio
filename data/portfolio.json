@@ -2,6 +2,7 @@
   "showreelUrl": "",
   "resumePdfUrl": "",
   "featuredWorkIds": [
+    "w_1795602256588",
     "w6",
     "w1",
     "w7",
@@ -194,6 +195,33 @@
     }
   },
   "items": [
+    {
+      "id": "w_1795602256588",
+      "folder": "anim-rigging",
+      "type": "video",
+      "duration": "00:37",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "imageUrl": "",
+      "videoUrl": "【【Live2D展示】芮雯Reven】 https://www.bilibili.com/video/BV1L6bG6vEjC/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "title": {
+        "zh": "Live2D模型：芮雯",
+        "en": "Live2D Model: Reven"
+      },
+      "desc": {
+        "zh": "Live2D面捕模型，原画、拆分、绑定和制作一条龙。",
+        "en": "Live2D Model"
+      },
+      "tags": {
+        "zh": [
+          "Live2D"
+        ],
+        "en": [
+          "Live2D"
+        ]
+      }
+    },
     {
       "id": "w1",
       "folder": "anim-personal",
