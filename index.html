@@ -1213,11 +1213,13 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transform: scale(var(--banner-scale, 1));
+      transform-origin: var(--banner-origin, 50% 50%);
       transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .portfolio-banner:hover .banner-slide.active img {
-      transform: scale(1.02);
+      transform: scale(calc(var(--banner-scale, 1) * 1.02));
     }
 
     .modal-media-stage img {
@@ -2258,8 +2260,10 @@
 
       slidesContainer.innerHTML = featuredItems.map((item, idx) => {
         const mediaSrc = item.coverUrl || item.imageUrl || '';
+        const pos = item.bannerPosition || '50% 50%';
+        const zoom = Number(item.bannerZoom) > 0 ? Number(item.bannerZoom) : 1;
         const visualHTML = mediaSrc
-          ? `<img src="${mediaSrc}" alt="${item.title[currentLang] || ''}" loading="lazy" />`
+          ? `<img src="${mediaSrc}" alt="${item.title[currentLang] || ''}" loading="lazy" style="object-position:${pos};--banner-origin:${pos};--banner-scale:${zoom};" />`
           : buildBannerSlideSVG(item, idx);
         return `
         <div class="banner-slide ${idx === currentBannerIndex ? 'active' : ''}" data-work-id="${item.id}">
@@ -2425,18 +2429,65 @@
     }
 
     function toggleLanguage() {
-      currentLang = currentLang === 'zh' ? 'en' : 'zh';
+      currentLang = currentLang === 'zh' ? 'en' : 'zh'; try { localStorage.setItem('coco_lang', currentLang); } catch(e) {}
       applyLanguage();
     }
 
-    // 切换首页与作品集视图
-    function switchView(viewName) {
-      document.getElementById('view-home').classList.toggle('active', viewName === 'home');
-      document.getElementById('view-portfolio').classList.toggle('active', viewName === 'portfolio');
-      document.getElementById('tab-home').classList.toggle('active', viewName === 'home');
-      document.getElementById('tab-portfolio').classList.toggle('active', viewName === 'portfolio');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (viewName === 'portfolio') {
+    let currentView = 'home';
+
+    function syncUrlHash() {
+      try {
+        const hash = currentView === 'portfolio'
+          ? `#portfolio/${encodeURIComponent(currentFolderId)}${currentMediaFilter !== 'all' ? '?filter=' + currentMediaFilter : ''}`
+          : '#home';
+        if (window.location.hash !== hash) {
+          history.replaceState(null, '', hash);
+        }
+      } catch (e) {}
+    }
+
+    function restoreStateFromUrl() {
+      try {
+        const savedLang = localStorage.getItem('coco_lang');
+        if (savedLang === 'zh' || savedLang === 'en') currentLang = savedLang;
+        const savedTheme = localStorage.getItem('coco_theme');
+        if (savedTheme === 'light-grey') document.documentElement.setAttribute('data-theme', 'light-grey');
+      } catch (e) {}
+
+      const rawHash = (window.location.hash || '').replace(/^#/, '');
+      if (rawHash.startsWith('portfolio')) {
+        currentView = 'portfolio';
+        const [pathPart, queryPart] = rawHash.split('?');
+        const parts = pathPart.split('/');
+        if (parts[1]) {
+          const decodedFolder = decodeURIComponent(parts[1]);
+          if (folderSystem[decodedFolder]) {
+            currentFolderId = decodedFolder;
+          }
+        }
+        if (queryPart) {
+          const params = new URLSearchParams(queryPart);
+          const f = params.get('filter');
+          if (f === 'all' || f === 'video' || f === 'image') {
+            currentMediaFilter = f;
+          }
+        }
+      } else {
+        currentView = 'home';
+      }
+    }
+
+    function applyCurrentViewUI(scrollTop = true) {
+      document.getElementById('view-home').classList.toggle('active', currentView === 'home');
+      document.getElementById('view-portfolio').classList.toggle('active', currentView === 'portfolio');
+      document.getElementById('tab-home').classList.toggle('active', currentView === 'home');
+      document.getElementById('tab-portfolio').classList.toggle('active', currentView === 'portfolio');
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      const activeChip = document.getElementById(`filter-${currentMediaFilter}`);
+      if (activeChip) activeChip.classList.add('active');
+
+      if (scrollTop) window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (currentView === 'portfolio') {
         renderBanner();
         startBannerAutoPlay();
         renderExplorer();
@@ -2445,8 +2496,16 @@
       }
     }
 
+    // 切换首页与作品集视图
+    function switchView(viewName) {
+      currentView = viewName;
+      syncUrlHash();
+      applyCurrentViewUI(true);
+    }
+
     function navigateFolder(folderId) {
       currentFolderId = folderId;
+      syncUrlHash();
       renderExplorer();
     }
 
@@ -2454,6 +2513,7 @@
       currentMediaFilter = filter;
       document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
       btnEl.classList.add('active');
+      syncUrlHash();
       renderExplorer();
     }
 
@@ -2653,8 +2713,20 @@
     }
 
     function closeModal() {
-      document.getElementById('media-modal').classList.remove('open');
+      const modal = document.getElementById('media-modal');
+      const stage = document.getElementById('modal-stage');
+      if (stage) {
+        stage.querySelectorAll('video').forEach(v => {
+          try { v.pause(); v.removeAttribute('src'); v.load(); } catch (e) {}
+        });
+        stage.innerHTML = '';
+      }
+      if (modal) modal.classList.remove('open');
     }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
 
     // 切换深色高级灰 / 浅色高级灰
     function toggleGreyTone() {
@@ -2662,8 +2734,10 @@
       const current = html.getAttribute('data-theme');
       if (current === 'light-grey') {
         html.removeAttribute('data-theme');
+        try { localStorage.setItem('coco_theme', 'dark-grey'); } catch (e) {}
       } else {
         html.setAttribute('data-theme', 'light-grey');
+        try { localStorage.setItem('coco_theme', 'light-grey'); } catch (e) {}
       }
     }
 
@@ -2699,14 +2773,18 @@
         if (data.folders && Object.keys(data.folders).length > 0) folderSystem = data.folders;
         if (Array.isArray(data.items) && data.items.length > 0) portfolioItems = data.items;
         if (Array.isArray(data.featuredWorkIds) && data.featuredWorkIds.length > 0) featuredWorkIds = data.featuredWorkIds;
+        restoreStateFromUrl();
         applyLanguage();
+        applyCurrentViewUI(false);
       } catch (e) {
         // 本地直接打开或画布预览时使用内置示例数据
       }
     }
 
-    // 初始化渲染
+    // 初始化渲染（支持刷新保持当前视图与文件夹位置）
+    restoreStateFromUrl();
     applyLanguage();
+    applyCurrentViewUI(false);
     loadExternalPortfolioData();
   </script>
 </body>

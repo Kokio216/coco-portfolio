@@ -100,6 +100,56 @@
     .status-bar.show { display: block; }
     .upload-inline { display: flex; gap: 8px; align-items: center; }
     .upload-inline input[type="text"] { flex: 1; }
+    .banner-crop-box {
+      margin-top: 12px;
+      padding: 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: none;
+    }
+    .banner-crop-box.show { display: block; }
+    .banner-preview-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 4.2;
+      background: #0d0e11;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--accent);
+      cursor: grab;
+      user-select: none;
+      margin: 10px 0 14px;
+    }
+    .banner-preview-frame:active { cursor: grabbing; }
+    .banner-preview-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      display: block;
+    }
+    .banner-preview-empty {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+    .banner-guide-line {
+      position: absolute;
+      pointer-events: none;
+      border-color: rgba(43, 192, 169, 0.35);
+    }
+    .banner-guide-h { left: 0; right: 0; top: 50%; border-top: 1px dashed rgba(43, 192, 169, 0.35); }
+    .banner-guide-v { top: 0; bottom: 0; left: 50%; border-left: 1px dashed rgba(43, 192, 169, 0.35); }
+    .crop-sliders { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: center; }
+    .crop-slider-item label {
+      display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--muted); margin-bottom: 4px;
+    }
+    .crop-slider-item input[type="range"] { width: 100%; accent-color: var(--accent); }
     @media (max-width: 760px) {
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
@@ -197,7 +247,7 @@
             <div class="field">
               <label>图片 / 封面图（可直接点击右侧按钮从电脑上传）</label>
               <div class="upload-inline">
-                <input id="w-cover" type="text" placeholder="./uploads/xxx.jpg 或外部图片链接" />
+                <input id="w-cover" type="text" placeholder="./uploads/xxx.jpg 或外部图片链接" oninput="updateBannerCropPreview()" />
                 <label class="btn" style="margin:0;cursor:pointer;">
                   上传图片
                   <input type="file" accept="image/*" style="display:none;" onchange="uploadFileToGitHub(this, 'w-cover')" />
@@ -226,8 +276,36 @@
           </div>
 
           <div class="field" style="flex-direction:row;align-items:center;gap:10px;margin-top:4px;">
-            <input id="w-featured" type="checkbox" style="width:16px;height:16px;" />
-            <label for="w-featured" style="margin:0;color:var(--text);cursor:pointer;">同时放入作品集顶部 Banner 轮播展示</label>
+            <input id="w-featured" type="checkbox" style="width:16px;height:16px;" onchange="toggleBannerCropBox()" />
+            <label for="w-featured" style="margin:0;color:var(--text);cursor:pointer;">同时放入作品集顶部 Banner 轮播展示（勾选后可手动调整选区）</label>
+          </div>
+
+          <!-- Banner 手动选区可视化预览面板 -->
+          <div id="banner-crop-box" class="banner-crop-box">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+              <div style="font-size:0.86rem;font-weight:700;color:var(--text);">Banner 手动选区（直接在下方画框内拖动图片，或拉动滑块微调）</div>
+              <button type="button" class="btn" style="padding:4px 10px;font-size:0.76rem;" onclick="resetBannerCrop()">重置居中</button>
+            </div>
+            <div id="banner-preview-frame" class="banner-preview-frame">
+              <img id="banner-preview-img" src="" alt="" style="display:none;" />
+              <div id="banner-preview-empty" class="banner-preview-empty">请先在上方上传图片或填入封面图链接</div>
+              <div class="banner-guide-line banner-guide-h"></div>
+              <div class="banner-guide-line banner-guide-v"></div>
+            </div>
+            <div class="crop-sliders">
+              <div class="crop-slider-item">
+                <label><span>左右位置 (X)</span><span id="crop-x-val">50%</span></label>
+                <input id="w-banner-x" type="range" min="0" max="100" value="50" oninput="updateBannerCropPreview()" />
+              </div>
+              <div class="crop-slider-item">
+                <label><span>上下位置 (Y)</span><span id="crop-y-val">50%</span></label>
+                <input id="w-banner-y" type="range" min="0" max="100" value="50" oninput="updateBannerCropPreview()" />
+              </div>
+              <div class="crop-slider-item">
+                <label><span>画面缩放</span><span id="crop-zoom-val">100%</span></label>
+                <input id="w-banner-zoom" type="range" min="100" max="200" value="100" oninput="updateBannerCropPreview()" />
+              </div>
+            </div>
           </div>
 
           <div style="display:flex;gap:10px;margin-top:14px;">
@@ -446,6 +524,7 @@
           const relativePath = `./${path}`;
           document.getElementById(targetInputId).value = relativePath;
           if (isResume && siteData) siteData.resumePdfUrl = relativePath;
+          if (targetInputId === 'w-cover') updateBannerCropPreview();
           showStatus(`上传成功！路径已填入：${relativePath}`, 4000);
         } catch (err) {
           showStatus('上传出错：' + err.message, 5000);
@@ -546,6 +625,8 @@
         coverUrl: cover,
         imageUrl: type === 'image' ? cover : '',
         videoUrl: type === 'video' ? document.getElementById('w-video').value.trim() : '',
+        bannerPosition: `${document.getElementById('w-banner-x').value}% ${document.getElementById('w-banner-y').value}%`,
+        bannerZoom: Number((Number(document.getElementById('w-banner-zoom').value) / 100).toFixed(2)),
         title: {
           zh: titleZh,
           en: document.getElementById('w-title-en').value.trim() || titleZh
@@ -595,6 +676,12 @@
       document.getElementById('w-tags-zh').value = (item.tags?.zh || []).join(', ');
       document.getElementById('w-tags-en').value = (item.tags?.en || []).join(', ');
       document.getElementById('w-featured').checked = (siteData.featuredWorkIds || []).includes(item.id);
+      const posParts = (item.bannerPosition || '50% 50%').replace(/%/g, '').trim().split(/\s+/);
+      document.getElementById('w-banner-x').value = Number.isFinite(Number(posParts[0])) ? Number(posParts[0]) : 50;
+      document.getElementById('w-banner-y').value = Number.isFinite(Number(posParts[1])) ? Number(posParts[1]) : 50;
+      document.getElementById('w-banner-zoom').value = item.bannerZoom ? Math.round(Number(item.bannerZoom) * 100) : 100;
+      toggleBannerCropBox();
+      updateBannerCropPreview();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -610,7 +697,81 @@
       ['w-edit-id','w-year','w-title-zh','w-title-en','w-desc-zh','w-desc-en','w-cover','w-video','w-duration','w-tags-zh','w-tags-en']
         .forEach(id => document.getElementById(id).value = '');
       document.getElementById('w-featured').checked = false;
+      resetBannerCrop();
+      toggleBannerCropBox();
     }
+
+    function toggleBannerCropBox() {
+      const checked = document.getElementById('w-featured').checked;
+      document.getElementById('banner-crop-box').classList.toggle('show', checked);
+      if (checked) updateBannerCropPreview();
+    }
+
+    function resetBannerCrop() {
+      document.getElementById('w-banner-x').value = 50;
+      document.getElementById('w-banner-y').value = 50;
+      document.getElementById('w-banner-zoom').value = 100;
+      updateBannerCropPreview();
+    }
+
+    function resolvePreviewUrl(url) {
+      if (!url) return '';
+      if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) return url;
+      return '../' + url.replace(/^\.\//, '');
+    }
+
+    function updateBannerCropPreview() {
+      const rawUrl = document.getElementById('w-cover').value.trim();
+      const x = document.getElementById('w-banner-x').value;
+      const y = document.getElementById('w-banner-y').value;
+      const zoomPct = document.getElementById('w-banner-zoom').value;
+      document.getElementById('crop-x-val').textContent = x + '%';
+      document.getElementById('crop-y-val').textContent = y + '%';
+      document.getElementById('crop-zoom-val').textContent = zoomPct + '%';
+
+      const img = document.getElementById('banner-preview-img');
+      const empty = document.getElementById('banner-preview-empty');
+      if (rawUrl) {
+        const src = resolvePreviewUrl(rawUrl);
+        if (img.getAttribute('src') !== src) img.src = src;
+        img.style.display = 'block';
+        img.style.objectPosition = `${x}% ${y}%`;
+        img.style.transformOrigin = `${x}% ${y}%`;
+        img.style.transform = `scale(${(Number(zoomPct) / 100).toFixed(2)})`;
+        empty.style.display = 'none';
+      } else {
+        img.style.display = 'none';
+        empty.style.display = 'flex';
+      }
+    }
+
+    // 支持直接在预览框内按住鼠标拖动调整 Banner 选区
+    (function initBannerDrag() {
+      const frame = document.getElementById('banner-preview-frame');
+      if (!frame) return;
+      let dragging = false, startX = 0, startY = 0, initX = 50, initY = 50;
+      frame.addEventListener('pointerdown', (e) => {
+        dragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        initX = Number(document.getElementById('w-banner-x').value);
+        initY = Number(document.getElementById('w-banner-y').value);
+        frame.setPointerCapture(e.pointerId);
+      });
+      frame.addEventListener('pointermove', (e) => {
+        if (!dragging) return;
+        const rect = frame.getBoundingClientRect();
+        const dx = ((startX - e.clientX) / rect.width) * 100;
+        const dy = ((startY - e.clientY) / rect.height) * 100;
+        const nextX = Math.max(0, Math.min(100, Math.round(initX + dx)));
+        const nextY = Math.max(0, Math.min(100, Math.round(initY + dy)));
+        document.getElementById('w-banner-x').value = nextX;
+        document.getElementById('w-banner-y').value = nextY;
+        updateBannerCropPreview();
+      });
+      frame.addEventListener('pointerup', () => { dragging = false; });
+      frame.addEventListener('pointercancel', () => { dragging = false; });
+    })();
 
     function addFolder() {
       const parentId = document.getElementById('f-parent').value;
