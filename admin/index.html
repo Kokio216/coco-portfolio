@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coco's Portfolio · 作品管理后台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #16171a;
+      --surface: #202227;
+      --elevated: #2a2d34;
+      --border: #333740;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --accent: #2bc0a9;
+      --accent-soft: rgba(43, 192, 169, 0.15);
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", "Noto Sans SC", -apple-system, sans-serif;
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(32, 34, 39, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .brand { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 10px; }
+    .dot { width: 10px; height: 10px; border-radius: 3px; background: var(--accent); }
+    .top-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .btn {
+      border: 1px solid var(--border); background: var(--elevated); color: var(--text);
+      padding: 8px 16px; border-radius: 9px; font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn-primary { background: var(--accent); color: #111; border-color: var(--accent); }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-danger { border-color: rgba(239,68,68,0.5); color: #fca5a5; }
+    .btn-danger:hover { background: rgba(239,68,68,0.15); border-color: var(--danger); }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 24px 80px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px; margin-bottom: 24px;
+    }
+    .card h2 { font-size: 1.15rem; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+    .hint { font-size: 0.83rem; color: var(--muted); margin-bottom: 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+    .field label { font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+    .field input, .field select, .field textarea {
+      background: var(--bg); color: var(--text); border: 1px solid var(--border);
+      border-radius: 8px; padding: 9px 12px; font-size: 0.88rem; font-family: inherit;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab-btn {
+      padding: 9px 18px; border-radius: 999px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted); font-weight: 600; cursor: pointer; font-size: 0.88rem;
+    }
+    .tab-btn.active { background: var(--accent); color: #111; border-color: var(--accent); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .item-row {
+      background: var(--elevated); border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    }
+    .item-meta { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 240px; }
+    .thumb-mini {
+      width: 72px; height: 46px; border-radius: 6px; background: #111; border: 1px solid var(--border);
+      object-fit: cover; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--muted);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .thumb-mini img { width: 100%; height: 100%; object-fit: cover; }
+    .badge {
+      display: inline-block; font-size: 0.72rem; padding: 2px 8px; border-radius: 999px;
+      background: var(--accent-soft); color: var(--accent); font-weight: 600; margin-right: 6px;
+    }
+    .status-bar {
+      position: fixed; bottom: 20px; right: 24px; z-index: 100;
+      background: var(--elevated); border: 1px solid var(--accent); color: var(--text);
+      padding: 12px 18px; border-radius: 10px; font-size: 0.86rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45); display: none;
+    }
+    .status-bar.show { display: block; }
+    .upload-inline { display: flex; gap: 8px; align-items: center; }
+    .upload-inline input[type="text"] { flex: 1; }
+    @media (max-width: 760px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="dot"></span>Coco's Portfolio · 在线作品管理后台</div>
+    <div class="top-actions">
+      <a class="btn" href="../index.html" target="_blank">查看前台网页 ↗</a>
+      <button class="btn" onclick="loadFromGitHub()">重新读取线上数据</button>
+      <button class="btn btn-primary" onclick="saveToGitHub()">保存到线上网站</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- 1. GitHub 连接设置 -->
+    <section class="card" id="auth-card">
+      <h2>
+        <span>第 1 步：连接你的 GitHub 仓库（只需填一次，保存在当前浏览器）</span>
+        <span id="conn-state" style="font-size:0.8rem;color:var(--muted);">未连接</span>
+      </h2>
+      <p class="hint">令牌（Token）仅保存在你当前电脑的浏览器里，别人打开这个后台页面也无法修改你的网站。</p>
+      <div class="grid-3">
+        <div class="field">
+          <label>GitHub 用户名（例如 cocochen）</label>
+          <input id="gh-owner" type="text" placeholder="你的 GitHub 用户名" />
+        </div>
+        <div class="field">
+          <label>仓库名称（例如 coco-portfolio）</label>
+          <input id="gh-repo" type="text" placeholder="存放本网站的仓库名" />
+        </div>
+        <div class="field">
+          <label>GitHub 专属密钥（Fine-grained Token）</label>
+          <input id="gh-token" type="password" placeholder="github_pat_..." />
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="connectAndLoad()">连接并加载作品数据</button>
+    </section>
+
+    <!-- 2. 主管理区域 -->
+    <div id="manager-area" style="display:none;">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('works', this)">作品管理</button>
+        <button class="tab-btn" onclick="switchTab('folders', this)">文件夹管理</button>
+        <button class="tab-btn" onclick="switchTab('links', this)">作品集合集 & 简历 PDF</button>
+      </div>
+
+      <!-- Tab 1: 作品管理 -->
+      <section id="panel-works" class="panel active">
+        <div class="card">
+          <h2 id="work-form-title">新增 / 编辑作品</h2>
+          <input type="hidden" id="w-edit-id" />
+          <div class="grid-3">
+            <div class="field">
+              <label>所属文件夹</label>
+              <select id="w-folder"></select>
+            </div>
+            <div class="field">
+              <label>作品类型</label>
+              <select id="w-type" onchange="toggleMediaInputs()">
+                <option value="image">图片作品</option>
+                <option value="video">视频作品</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>制作年份（例如 2026）</label>
+              <input id="w-year" type="text" placeholder="2026" />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>作品标题（中文）</label>
+              <input id="w-title-zh" type="text" placeholder="例如：《许愿塔》角色设定图" />
+            </div>
+            <div class="field">
+              <label>作品标题（英文）</label>
+              <input id="w-title-en" type="text" placeholder='e.g. "Wishing Tower" Character Sheet' />
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>简短介绍（中文）</label>
+              <textarea id="w-desc-zh" rows="2" placeholder="一两句话介绍你负责的内容"></textarea>
+            </div>
+            <div class="field">
+              <label>简短介绍（英文）</label>
+              <textarea id="w-desc-en" rows="2" placeholder="Brief English description"></textarea>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="field">
+              <label>图片 / 封面图（可直接点击右侧按钮从电脑上传）</label>
+              <div class="upload-inline">
+                <input id="w-cover" type="text" placeholder="./uploads/xxx.jpg 或外部图片链接" />
+                <label class="btn" style="margin:0;cursor:pointer;">
+                  上传图片
+                  <input type="file" accept="image/*" style="display:none;" onchange="uploadFileToGitHub(this, 'w-cover')" />
+                </label>
+              </div>
+            </div>
+            <div class="field" id="video-url-field" style="display:none;">
+              <label>视频链接（粘贴 Bilibili / YouTube / Vimeo 链接，或直链 MP4）</label>
+              <input id="w-video" type="text" placeholder="https://www.bilibili.com/video/BV..." />
+            </div>
+          </div>
+
+          <div class="grid-3">
+            <div class="field" id="duration-field" style="display:none;">
+              <label>视频时长（例如 01:15）</label>
+              <input id="w-duration" type="text" placeholder="01:00" />
+            </div>
+            <div class="field">
+              <label>标签（中文，用英文逗号分隔）</label>
+              <input id="w-tags-zh" type="text" placeholder="图片作品, 角色设定, 许愿塔" />
+            </div>
+            <div class="field">
+              <label>标签（英文，用英文逗号分隔）</label>
+              <input id="w-tags-en" type="text" placeholder="Image, Character Design, Wishing Tower" />
+            </div>
+          </div>
+
+          <div class="field" style="flex-direction:row;align-items:center;gap:10px;margin-top:4px;">
+            <input id="w-featured" type="checkbox" style="width:16px;height:16px;" />
+            <label for="w-featured" style="margin:0;color:var(--text);cursor:pointer;">同时放入作品集顶部 Banner 轮播展示</label>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:14px;">
+            <button class="btn btn-primary" onclick="submitWorkForm()">添加到作品列表</button>
+            <button class="btn" onclick="resetWorkForm()">清空表单</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>已有作品列表（修改后别忘了点右上角「保存到线上网站」）</h2>
+          <div id="works-list"></div>
+        </div>
+      </section>
+
+      <!-- Tab 2: 文件夹管理 -->
+      <section id="panel-folders" class="panel">
+        <div class="card">
+          <h2>新增子文件夹（新增后前台与后台会自动同步）</h2>
+          <div class="grid-3">
+            <div class="field">
+              <label>上级文件夹</label>
+              <select id="f-parent"></select>
+            </div>
+            <div class="field">
+              <label>新文件夹名称（中文）</label>
+              <input id="f-name-zh" type="text" placeholder="例如：UI与道具" />
+            </div>
+            <div class="field">
+              <label>新文件夹名称（英文）</label>
+              <input id="f-name-en" type="text" placeholder="e.g. UI & Props" />
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>文件夹简介（中文）</label>
+              <input id="f-desc-zh" type="text" placeholder="一句话说明这个文件夹里放什么" />
+            </div>
+            <div class="field">
+              <label>文件夹简介（英文）</label>
+              <input id="f-desc-en" type="text" placeholder="Brief English description" />
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="addFolder()">新增文件夹</button>
+        </div>
+
+        <div class="card">
+          <h2>当前所有文件夹结构</h2>
+          <div id="folders-list"></div>
+        </div>
+      </section>
+
+      <!-- Tab 3: 作品集合集 & 简历 PDF -->
+      <section id="panel-links" class="panel">
+        <div class="card">
+          <h2>首页快捷按钮链接（作品集合集 & 简历 PDF）</h2>
+          <p class="hint">填入链接或直接上传简历 PDF 后，点击右上角「保存到线上网站」，首页对应的两个按钮就会自动生效。</p>
+          <div class="field">
+            <label>作品集合集链接（Bilibili / YouTube / Vimeo 网址）</label>
+            <input id="link-showreel" type="text" placeholder="https://b23.tv/..." oninput="siteData.showreelUrl = this.value.trim()" />
+          </div>
+          <div class="field">
+            <label>简历 PDF（可以直接上传 PDF 文件，或填网盘直链）</label>
+            <div class="upload-inline">
+              <input id="link-resume" type="text" placeholder="./uploads/Coco_Resume.pdf" oninput="siteData.resumePdfUrl = this.value.trim()" />
+              <label class="btn" style="margin:0;cursor:pointer;">
+                上传简历 PDF
+                <input type="file" accept="application/pdf" style="display:none;" onchange="uploadFileToGitHub(this, 'link-resume', true)" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="status-bar" id="status-bar"></div>
+
+  <script>
+    let siteData = null;
+    let currentJsonSha = null;
+
+    function showStatus(msg, duration = 3500) {
+      const el = document.getElementById('status-bar');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window._stTimer);
+      window._stTimer = setTimeout(() => el.classList.remove('show'), duration);
+    }
+
+    function utf8ToBase64(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = '';
+      bytes.forEach(b => bin += String.fromCharCode(b));
+      return btoa(bin);
+    }
+
+    function base64ToUtf8(b64) {
+      const bin = atob(b64.replace(/\s/g, ''));
+      const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+
+    function getAuth() {
+      return {
+        owner: document.getElementById('gh-owner').value.trim(),
+        repo: document.getElementById('gh-repo').value.trim(),
+        token: document.getElementById('gh-token').value.trim()
+      };
+    }
+
+    function saveAuthLocal() {
+      localStorage.setItem('coco_gh_auth', JSON.stringify(getAuth()));
+    }
+
+    function loadAuthLocal() {
+      try {
+        const saved = JSON.parse(localStorage.getItem('coco_gh_auth') || '{}');
+        if (saved.owner) document.getElementById('gh-owner').value = saved.owner;
+        if (saved.repo) document.getElementById('gh-repo').value = saved.repo;
+        if (saved.token) document.getElementById('gh-token').value = saved.token;
+        if (saved.owner && saved.repo && saved.token) connectAndLoad();
+      } catch (e) {}
+    }
+
+    async function connectAndLoad() {
+      saveAuthLocal();
+      await loadFromGitHub();
+    }
+
+    async function loadFromGitHub() {
+      const { owner, repo, token } = getAuth();
+      if (!owner || !repo || !token) {
+        showStatus('请先填好 GitHub 用户名、仓库名和密钥');
+        return;
+      }
+      showStatus('正在连接 GitHub 读取作品数据...', 8000);
+      try {
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data/portfolio.json`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' },
+          cache: 'no-store'
+        });
+        if (!res.ok) throw new Error('读取失败，请检查用户名、仓库名或密钥权限');
+        const json = await res.json();
+        currentJsonSha = json.sha;
+        siteData = JSON.parse(base64ToUtf8(json.content));
+        document.getElementById('conn-state').textContent = `● 已连接：${owner}/${repo}`;
+        document.getElementById('conn-state').style.color = 'var(--accent)';
+        document.getElementById('manager-area').style.display = 'block';
+        renderAll();
+        showStatus('已成功加载线上作品数据！');
+      } catch (err) {
+        showStatus('连接出错：' + err.message, 5000);
+      }
+    }
+
+    async function saveToGitHub() {
+      const { owner, repo, token } = getAuth();
+      if (!siteData || !owner || !repo || !token) {
+        showStatus('请先连接 GitHub 仓库');
+        return;
+      }
+      showStatus('正在保存到线上仓库...', 8000);
+      try {
+        const contentStr = JSON.stringify(siteData, null, 2);
+        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/data/portfolio.json`, {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: 'application/vnd.github+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Update portfolio works via online admin',
+            content: utf8ToBase64(contentStr),
+            sha: currentJsonSha
+          })
+        });
+        if (!res.ok) throw new Error('保存失败，请确认密钥具有 Contents 读写权限');
+        const result = await res.json();
+        currentJsonSha = result.content.sha;
+        showStatus('保存成功！约 30 秒后前台网页将自动同步更新。', 5000);
+      } catch (err) {
+        showStatus('保存出错：' + err.message, 5000);
+      }
+    }
+
+    async function uploadFileToGitHub(inputEl, targetInputId, isResume = false) {
+      const file = inputEl.files[0];
+      if (!file) return;
+      const { owner, repo, token } = getAuth();
+      if (!owner || !repo || !token) {
+        showStatus('请先连接 GitHub 仓库再上传文件');
+        return;
+      }
+      const safeName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+      const path = `uploads/${safeName}`;
+      showStatus(`正在上传 ${file.name} ...`, 15000);
+
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const base64Data = reader.result.split(',')[1];
+          const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/vnd.github+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Upload ${safeName}`,
+              content: base64Data
+            })
+          });
+          if (!res.ok) throw new Error('上传失败，请检查文件大小（建议图片小于 10MB）');
+          const relativePath = `./${path}`;
+          document.getElementById(targetInputId).value = relativePath;
+          if (isResume && siteData) siteData.resumePdfUrl = relativePath;
+          showStatus(`上传成功！路径已填入：${relativePath}`, 4000);
+        } catch (err) {
+          showStatus('上传出错：' + err.message, 5000);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(`panel-${name}`).classList.add('active');
+    }
+
+    function toggleMediaInputs() {
+      const isVideo = document.getElementById('w-type').value === 'video';
+      document.getElementById('video-url-field').style.display = isVideo ? 'flex' : 'none';
+      document.getElementById('duration-field').style.display = isVideo ? 'flex' : 'none';
+    }
+
+    function renderAll() {
+      if (!siteData) return;
+      // 填充文件夹下拉选项
+      const folderSelect = document.getElementById('w-folder');
+      const parentSelect = document.getElementById('f-parent');
+      const folderEntries = Object.values(siteData.folders);
+
+      folderSelect.innerHTML = folderEntries
+        .filter(f => f.id !== 'root')
+        .map(f => `<option value="${f.id}">${'　'.repeat(Math.max(0, f.depth - 1))}${f.name.zh} (${f.name.en})</option>`)
+        .join('');
+
+      parentSelect.innerHTML = folderEntries
+        .map(f => `<option value="${f.id}">${'　'.repeat(f.depth)}${f.name.zh}</option>`)
+        .join('');
+
+      // 填充作品列表
+      const worksEl = document.getElementById('works-list');
+      worksEl.innerHTML = siteData.items.map(item => {
+        const folderName = siteData.folders[item.folder]?.name?.zh || item.folder;
+        const isFeatured = (siteData.featuredWorkIds || []).includes(item.id);
+        const thumb = item.coverUrl || item.imageUrl;
+        return `
+          <div class="item-row">
+            <div class="item-meta">
+              <div class="thumb-mini">${thumb ? `<img src="../${thumb.replace(/^\.\//, '')}" />` : (item.type === 'video' ? '视频' : '图片')}</div>
+              <div>
+                <div style="font-weight:700;font-size:0.95rem;">${item.title.zh}</div>
+                <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">
+                  <span class="badge">${folderName}</span>
+                  ${isFeatured ? '<span class="badge">顶部 Banner</span>' : ''}
+                  ${item.year || ''} · ${item.type === 'video' ? '视频' : '图片'}
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn" onclick="editWork('${item.id}')">编辑</button>
+              <button class="btn btn-danger" onclick="deleteWork('${item.id}')">删除</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // 填充文件夹列表
+      const foldersEl = document.getElementById('folders-list');
+      foldersEl.innerHTML = folderEntries
+        .filter(f => f.id !== 'root')
+        .map(f => `
+          <div class="item-row">
+            <div>
+              <div style="font-weight:700;">${'— '.repeat(Math.max(0, f.depth - 1))}${f.name.zh} <span style="color:var(--muted);font-weight:400;">(${f.name.en})</span></div>
+              <div style="font-size:0.8rem;color:var(--muted);">${f.desc.zh}</div>
+            </div>
+            <button class="btn btn-danger" onclick="deleteFolder('${f.id}')">删除</button>
+          </div>
+        `).join('');
+
+      // 填充首页快捷链接
+      document.getElementById('link-showreel').value = siteData.showreelUrl || '';
+      document.getElementById('link-resume').value = siteData.resumePdfUrl || '';
+    }
+
+    function submitWorkForm() {
+      const editId = document.getElementById('w-edit-id').value;
+      const type = document.getElementById('w-type').value;
+      const cover = document.getElementById('w-cover').value.trim();
+      const titleZh = document.getElementById('w-title-zh').value.trim();
+      if (!titleZh) { showStatus('请填写作品中文标题'); return; }
+
+      const newObj = {
+        id: editId || ('w_' + Date.now()),
+        folder: document.getElementById('w-folder').value,
+        type,
+        duration: type === 'video' ? (document.getElementById('w-duration').value.trim() || '00:30') : undefined,
+        year: document.getElementById('w-year').value.trim() || '2026',
+        color: '#2bc0a9',
+        coverUrl: cover,
+        imageUrl: type === 'image' ? cover : '',
+        videoUrl: type === 'video' ? document.getElementById('w-video').value.trim() : '',
+        title: {
+          zh: titleZh,
+          en: document.getElementById('w-title-en').value.trim() || titleZh
+        },
+        desc: {
+          zh: document.getElementById('w-desc-zh').value.trim(),
+          en: document.getElementById('w-desc-en').value.trim() || document.getElementById('w-desc-zh').value.trim()
+        },
+        tags: {
+          zh: document.getElementById('w-tags-zh').value.split(',').map(s => s.trim()).filter(Boolean),
+          en: document.getElementById('w-tags-en').value.split(',').map(s => s.trim()).filter(Boolean)
+        }
+      };
+
+      const idx = siteData.items.findIndex(i => i.id === newObj.id);
+      if (idx >= 0) siteData.items[idx] = newObj;
+      else siteData.items.unshift(newObj);
+
+      const featured = document.getElementById('w-featured').checked;
+      siteData.featuredWorkIds = siteData.featuredWorkIds || [];
+      if (featured && !siteData.featuredWorkIds.includes(newObj.id)) {
+        siteData.featuredWorkIds.unshift(newObj.id);
+      } else if (!featured) {
+        siteData.featuredWorkIds = siteData.featuredWorkIds.filter(id => id !== newObj.id);
+      }
+
+      resetWorkForm();
+      renderAll();
+      showStatus('已暂存到列表，别忘了点击右上角「保存到线上网站」！');
+    }
+
+    function editWork(id) {
+      const item = siteData.items.find(i => i.id === id);
+      if (!item) return;
+      document.getElementById('w-edit-id').value = item.id;
+      document.getElementById('w-folder').value = item.folder;
+      document.getElementById('w-type').value = item.type;
+      toggleMediaInputs();
+      document.getElementById('w-year').value = item.year || '';
+      document.getElementById('w-title-zh').value = item.title.zh || '';
+      document.getElementById('w-title-en').value = item.title.en || '';
+      document.getElementById('w-desc-zh').value = item.desc.zh || '';
+      document.getElementById('w-desc-en').value = item.desc.en || '';
+      document.getElementById('w-cover').value = item.coverUrl || item.imageUrl || '';
+      document.getElementById('w-video').value = item.videoUrl || '';
+      document.getElementById('w-duration').value = item.duration || '';
+      document.getElementById('w-tags-zh').value = (item.tags?.zh || []).join(', ');
+      document.getElementById('w-tags-en').value = (item.tags?.en || []).join(', ');
+      document.getElementById('w-featured').checked = (siteData.featuredWorkIds || []).includes(item.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function deleteWork(id) {
+      if (!confirm('确定要删除这件作品吗？')) return;
+      siteData.items = siteData.items.filter(i => i.id !== id);
+      siteData.featuredWorkIds = (siteData.featuredWorkIds || []).filter(fid => fid !== id);
+      renderAll();
+      showStatus('已从列表移除，点右上角「保存到线上网站」生效。');
+    }
+
+    function resetWorkForm() {
+      ['w-edit-id','w-year','w-title-zh','w-title-en','w-desc-zh','w-desc-en','w-cover','w-video','w-duration','w-tags-zh','w-tags-en']
+        .forEach(id => document.getElementById(id).value = '');
+      document.getElementById('w-featured').checked = false;
+    }
+
+    function addFolder() {
+      const parentId = document.getElementById('f-parent').value;
+      const nameZh = document.getElementById('f-name-zh').value.trim();
+      if (!nameZh) { showStatus('请填写文件夹中文名称'); return; }
+      const parent = siteData.folders[parentId];
+      const newId = 'folder_' + Date.now();
+      siteData.folders[newId] = {
+        id: newId,
+        depth: (parent.depth || 0) + 1,
+        parent: parentId,
+        name: { zh: nameZh, en: document.getElementById('f-name-en').value.trim() || nameZh },
+        desc: {
+          zh: document.getElementById('f-desc-zh').value.trim(),
+          en: document.getElementById('f-desc-en').value.trim() || document.getElementById('f-desc-zh').value.trim()
+        },
+        children: []
+      };
+      parent.children.push(newId);
+      ['f-name-zh','f-name-en','f-desc-zh','f-desc-en'].forEach(id => document.getElementById(id).value = '');
+      renderAll();
+      showStatus('已添加新文件夹，点右上角「保存到线上网站」即可同步！');
+    }
+
+    function deleteFolder(id) {
+      if (!confirm('确定删除这个文件夹吗？（不会删除里面的作品文件，但建议先转移作品）')) return;
+      const f = siteData.folders[id];
+      if (f && f.parent && siteData.folders[f.parent]) {
+        siteData.folders[f.parent].children = siteData.folders[f.parent].children.filter(c => c !== id);
+      }
+      delete siteData.folders[id];
+      renderAll();
+      showStatus('已移除文件夹，点右上角「保存到线上网站」生效。');
+    }
+
+    loadAuthLocal();
+  </script>
+</body>
+</html>

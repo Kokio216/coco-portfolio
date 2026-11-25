@@ -1,0 +1,473 @@
+{
+  "showreelUrl": "",
+  "resumePdfUrl": "",
+  "featuredWorkIds": [
+    "w6",
+    "w1",
+    "w7",
+    "w4",
+    "w9"
+  ],
+  "folders": {
+    "root": {
+      "id": "root",
+      "depth": 0,
+      "parent": null,
+      "name": {
+        "zh": "根目录",
+        "en": "Root"
+      },
+      "desc": {
+        "zh": "包含动画作品、游戏项目与个人作品三大主分类",
+        "en": "Main archive containing Animation, Game Projects, and Personal Works"
+      },
+      "children": [
+        "anim",
+        "game",
+        "personal"
+      ]
+    },
+    "anim": {
+      "id": "anim",
+      "depth": 1,
+      "parent": "root",
+      "name": {
+        "zh": "动画作品",
+        "en": "Animation Works"
+      },
+      "desc": {
+        "zh": "涵盖个人动画项目、参与的动画项目、动画练习及 Live2d和Spine",
+        "en": "Personal shorts, commercial collaborations, animation studies, and Live2D/Spine rigging"
+      },
+      "children": [
+        "anim-personal",
+        "anim-collab",
+        "anim-practice",
+        "anim-rigging"
+      ]
+    },
+    "anim-personal": {
+      "id": "anim-personal",
+      "depth": 2,
+      "parent": "anim",
+      "name": {
+        "zh": "个人动画项目",
+        "en": "Personal Animation Projects"
+      },
+      "desc": {
+        "zh": "独立负责剧本分镜、原画设定与后期合成的个人原创动画短片",
+        "en": "Original animated shorts independently directed, animated, and composited"
+      },
+      "children": []
+    },
+    "anim-collab": {
+      "id": "anim-collab",
+      "depth": 2,
+      "parent": "anim",
+      "name": {
+        "zh": "参与的动画项目",
+        "en": "Collaborative Animation Projects"
+      },
+      "desc": {
+        "zh": "参与商业宣传片、番剧或团队合作项目的一原、二原与动检片段",
+        "en": "Key animation and in-between cuts contributed to commercial PVs and team productions"
+      },
+      "children": []
+    },
+    "anim-practice": {
+      "id": "anim-practice",
+      "depth": 2,
+      "parent": "anim",
+      "name": {
+        "zh": "动画练习",
+        "en": "Animation Studies"
+      },
+      "desc": {
+        "zh": "日常角色演技、打斗作画、流体特效与物理运动规律练习",
+        "en": "Character acting, action choreography, fluid FX, and motion studies"
+      },
+      "children": []
+    },
+    "anim-rigging": {
+      "id": "anim-rigging",
+      "depth": 2,
+      "parent": "anim",
+      "name": {
+        "zh": "Live2d和Spine",
+        "en": "Live2D & Spine"
+      },
+      "desc": {
+        "zh": "角色立绘高精度模型绑定、九轴转身、面部捕捉与 Spine 战斗待机演出",
+        "en": "High-precision character rigging, multi-angle head turns, and skeletal combat animations"
+      },
+      "children": []
+    },
+    "game": {
+      "id": "game",
+      "depth": 1,
+      "parent": "root",
+      "name": {
+        "zh": "游戏项目",
+        "en": "Game Projects"
+      },
+      "desc": {
+        "zh": "原创及参与开发的游戏美术设定与动态资产档案",
+        "en": "Game art development, concept sheets, and interactive visual assets"
+      },
+      "children": [
+        "game-wishing-tower"
+      ]
+    },
+    "game-wishing-tower": {
+      "id": "game-wishing-tower",
+      "depth": 2,
+      "parent": "game",
+      "name": {
+        "zh": "“许愿塔”",
+        "en": "\"Wishing Tower\""
+      },
+      "desc": {
+        "zh": "核心游戏项目《许愿塔》—— 包含场景、角色及更多设定分类",
+        "en": "Core indie game project \"Wishing Tower\" — Environments, Characters, and expandable lore"
+      },
+      "children": [
+        "wt-scene",
+        "wt-char",
+        "wt-more"
+      ]
+    },
+    "wt-scene": {
+      "id": "wt-scene",
+      "depth": 3,
+      "parent": "game-wishing-tower",
+      "name": {
+        "zh": "场景",
+        "en": "Environments"
+      },
+      "desc": {
+        "zh": "《许愿塔》各层级空间氛围图、建筑结构设计与横版关卡背景资产",
+        "en": "Level atmosphere illustrations, architectural layouts, and background assets"
+      },
+      "children": []
+    },
+    "wt-char": {
+      "id": "wt-char",
+      "depth": 3,
+      "parent": "game-wishing-tower",
+      "name": {
+        "zh": "角色",
+        "en": "Characters"
+      },
+      "desc": {
+        "zh": "《许愿塔》主角团、NPC 与首领立绘设定、三视图及表情差分",
+        "en": "Main cast, NPCs, and boss concept sheets, turnarounds, and expression sets"
+      },
+      "children": []
+    },
+    "wt-more": {
+      "id": "wt-more",
+      "depth": 3,
+      "parent": "game-wishing-tower",
+      "name": {
+        "zh": "更多设定（待补充）",
+        "en": "Additional Assets (Expandable)"
+      },
+      "desc": {
+        "zh": "预留给《许愿塔》省略号（...）下的扩展子文件夹，可根据您的具体需求定制",
+        "en": "Reserved subfolder for props, UI, VFX, or lore under \"Wishing Tower\""
+      },
+      "children": []
+    },
+    "personal": {
+      "id": "personal",
+      "depth": 1,
+      "parent": "root",
+      "name": {
+        "zh": "个人作品",
+        "en": "Personal Works"
+      },
+      "desc": {
+        "zh": "日常插画、色彩速涂、概念草图与视觉实验（暂无子文件夹细分）",
+        "en": "Standalone illustrations, color studies, sketches, and visual experiments"
+      },
+      "children": []
+    }
+  },
+  "items": [
+    {
+      "id": "w1",
+      "folder": "anim-personal",
+      "type": "video",
+      "duration": "01:24",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "原创短片《灰烬回响》先行预告（视频示例）",
+        "en": "Original Short \"Echoes of Ash\" Teaser PV (Video Sample)"
+      },
+      "desc": {
+        "zh": "个人独立动画项目，负责全流程分镜设计、关键帧作画与后期摄影合成。",
+        "en": "Independently directed animated short covering storyboarding, key animation, and compositing."
+      },
+      "tags": {
+        "zh": [
+          "视频作品",
+          "独立短片",
+          "全流程制作"
+        ],
+        "en": [
+          "Video",
+          "Indie Short",
+          "Full Pipeline"
+        ]
+      }
+    },
+    {
+      "id": "w2",
+      "folder": "anim-collab",
+      "type": "video",
+      "duration": "00:48",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "合作项目宣传片卡段原画合集（视频示例）",
+        "en": "Collaborative PV Key Animation Reel (Video Sample)"
+      },
+      "desc": {
+        "zh": "负责高潮段落角色动作卡一原与特效作画。",
+        "en": "1st key animation and effects cuts produced for climax action sequences in collaborative PVs."
+      },
+      "tags": {
+        "zh": [
+          "视频作品",
+          "一原",
+          "项目合作"
+        ],
+        "en": [
+          "Video",
+          "1st Key",
+          "Collaboration"
+        ]
+      }
+    },
+    {
+      "id": "w3",
+      "folder": "anim-practice",
+      "type": "video",
+      "duration": "00:18",
+      "year": "2024",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "重量感与镜头跟随作画练习（视频示例）",
+        "en": "Weight & Dynamic Camera Follow Study (Video Sample)"
+      },
+      "desc": {
+        "zh": "针对大幅度透视变形、布料跟随与烟尘特效的逐帧手绘练习。",
+        "en": "Frame-by-frame hand-drawn study focusing on perspective foreshortening, cloth follow-through, and smoke FX."
+      },
+      "tags": {
+        "zh": [
+          "视频作品",
+          "逐帧练习",
+          "运动规律"
+        ],
+        "en": [
+          "Video",
+          "Frame-by-Frame",
+          "Motion Study"
+        ]
+      }
+    },
+    {
+      "id": "w4",
+      "folder": "anim-rigging",
+      "type": "video",
+      "duration": "01:05",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "高阶角色立绘全角度动态绑定展示",
+        "en": "Full-Angle Character Rigging Showcase"
+      },
+      "desc": {
+        "zh": "包含大角度转面、发丝多段物理摆动、呼吸律动与多组表情切换。",
+        "en": "Wide-angle head/body turns, multi-segment hair physics, breathing rhythm, and expression toggles."
+      },
+      "tags": {
+        "zh": [
+          "视频作品",
+          "角色绑定",
+          "物理动态"
+        ],
+        "en": [
+          "Video",
+          "Live2D Rigging",
+          "Physics"
+        ]
+      }
+    },
+    {
+      "id": "w5",
+      "folder": "anim-rigging",
+      "type": "video",
+      "duration": "00:35",
+      "year": "2024",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "横版动作角色待机与技能释放骨骼演出",
+        "en": "2D Action Character Idle & Skill Skeletal Animation"
+      },
+      "desc": {
+        "zh": "基于网格变形与骨骼权重的横版角色战斗循环动画。",
+        "en": "Side-scrolling combat loop and skill burst animated with mesh deformation and weighted bones."
+      },
+      "tags": {
+        "zh": [
+          "视频作品",
+          "骨骼动画",
+          "战斗演出"
+        ],
+        "en": [
+          "Video",
+          "Spine 2D",
+          "Combat Anim"
+        ]
+      }
+    },
+    {
+      "id": "w6",
+      "folder": "wt-scene",
+      "type": "image",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "《许愿塔》第一层：钟摆中庭（场景概念图）",
+        "en": "\"Wishing Tower\" Floor 1: Pendulum Atrium (Environment Concept)"
+      },
+      "desc": {
+        "zh": "高级灰岩石结构搭配青绿魔力光源，突出许愿塔内部的纵向深邃空间感。",
+        "en": "Architectural slate structures lit by arcane light, emphasizing vertical depth inside the tower."
+      },
+      "tags": {
+        "zh": [
+          "图片作品",
+          "场景设计",
+          "许愿塔"
+        ],
+        "en": [
+          "Image",
+          "Environment Art",
+          "Wishing Tower"
+        ]
+      }
+    },
+    {
+      "id": "w7",
+      "folder": "wt-char",
+      "type": "image",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "《许愿塔》核心角色设定图与三视图",
+        "en": "\"Wishing Tower\" Protagonist Concept & Turnaround Sheet"
+      },
+      "desc": {
+        "zh": "包含角色基础立绘、剪影设计、服装材质拆解以及局内动作姿态设定。",
+        "en": "Full character illustration, silhouette exploration, material callouts, and action poses."
+      },
+      "tags": {
+        "zh": [
+          "图片作品",
+          "角色设定",
+          "许愿塔"
+        ],
+        "en": [
+          "Image",
+          "Character Design",
+          "Wishing Tower"
+        ]
+      }
+    },
+    {
+      "id": "w8",
+      "folder": "wt-more",
+      "type": "image",
+      "year": "2024",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "《许愿塔》世界观机关道具与界面视觉设定",
+        "en": "\"Wishing Tower\" Mechanisms, Props & UI Visuals"
+      },
+      "desc": {
+        "zh": "对应“许愿塔”目录下的扩展设定内容，可按您的实际子分类调整。",
+        "en": "Expandable category items for props, mechanisms, and UI elements from \"Wishing Tower\"."
+      },
+      "tags": {
+        "zh": [
+          "图片作品",
+          "扩展设定",
+          "许愿塔"
+        ],
+        "en": [
+          "Image",
+          "Props & UI",
+          "Wishing Tower"
+        ]
+      }
+    },
+    {
+      "id": "w9",
+      "folder": "personal",
+      "type": "image",
+      "year": "2024",
+      "color": "#2bc0a9",
+      "coverUrl": "",
+      "videoUrl": "",
+      "imageUrl": "",
+      "title": {
+        "zh": "个人视觉实验：灰调与色彩构成插画",
+        "en": "Personal Visual Study: Grey Tone & Color Composition"
+      },
+      "desc": {
+        "zh": "收录于“个人作品”目录下（无子文件夹细分），直接展示单张或多图系列作品。",
+        "en": "Filed directly under \"Personal Works\" without subfolders, showcasing standalone illustrations."
+      },
+      "tags": {
+        "zh": [
+          "图片作品",
+          "个人插画",
+          "色彩构成"
+        ],
+        "en": [
+          "Image",
+          "Illustration",
+          "Color Study"
+        ]
+      }
+    }
+  ]
+}
