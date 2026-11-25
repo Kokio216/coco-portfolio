@@ -2,6 +2,7 @@
   "showreelUrl": "",
   "resumePdfUrl": "",
   "featuredWorkIds": [
+    "w_1795603117092",
     "w_1795602256588",
     "w6",
     "w1",
@@ -195,6 +196,35 @@
     }
   },
   "items": [
+    {
+      "id": "w_1795603117092",
+      "folder": "anim-rigging",
+      "type": "video",
+      "duration": "00:26",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795603009031_spine___.png",
+      "imageUrl": "",
+      "videoUrl": "【自学spine第二天 让OC酱走起来 ;3】 https://www.bilibili.com/video/BV1vxiHBrE1r/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "title": {
+        "zh": "Spine绑定正面走路",
+        "en": "Spine: Front View Walk"
+      },
+      "desc": {
+        "zh": "绘制、拆分并绑定。",
+        "en": "Drawn and rigged."
+      },
+      "tags": {
+        "zh": [
+          "Spine",
+          "骨骼绑定"
+        ],
+        "en": [
+          "Spine",
+          "Rigging"
+        ]
+      }
+    },
     {
       "id": "w_1795602256588",
       "folder": "anim-rigging",
