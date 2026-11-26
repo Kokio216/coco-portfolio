@@ -176,8 +176,8 @@
         "en": "Standalone illustrations, color studies, sketches, and visual experiments"
       },
       "children": [
-        "folder_1795684458825",
-        "folder_1795684499643"
+        "folder_1795684499643",
+        "folder_1795684458825"
       ]
     },
     "folder_1795604111688": {
@@ -219,6 +219,67 @@
       "desc": {
         "zh": "原创",
         "en": "original"
+      },
+      "children": [
+        "folder_1795686300540",
+        "folder_1795686333483",
+        "folder_1795686366101",
+        "folder_1795686284233"
+      ]
+    },
+    "folder_1795686284233": {
+      "id": "folder_1795686284233",
+      "depth": 3,
+      "parent": "folder_1795684499643",
+      "name": {
+        "zh": "游戏建筑设计",
+        "en": "Game Architectural Design"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "children": []
+    },
+    "folder_1795686300540": {
+      "id": "folder_1795686300540",
+      "depth": 3,
+      "parent": "folder_1795684499643",
+      "name": {
+        "zh": "角色设计",
+        "en": "Character Design"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "children": []
+    },
+    "folder_1795686333483": {
+      "id": "folder_1795686333483",
+      "depth": 3,
+      "parent": "folder_1795684499643",
+      "name": {
+        "zh": "插画",
+        "en": "Illustration"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "children": []
+    },
+    "folder_1795686366101": {
+      "id": "folder_1795686366101",
+      "depth": 3,
+      "parent": "folder_1795684499643",
+      "name": {
+        "zh": "场景",
+        "en": "Layout"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
       },
       "children": []
     }
