@@ -197,10 +197,108 @@
       font-size: 0.78rem;
       border-radius: 7px;
     }
+    .tag-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .tag-bank-label {
+      font-size: 0.74rem;
+      color: var(--muted);
+      width: 100%;
+    }
+    .tag-pill-choice {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+    .tag-pill-choice:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+    .tag-pill-choice.selected {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .gallery-box {
+      margin: 6px 0 14px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .gallery-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .gallery-card.is-cover {
+      border-color: var(--accent);
+    }
+    .gallery-card-img {
+      aspect-ratio: 16 / 10;
+      background: #0d0e11;
+      overflow: hidden;
+      position: relative;
+    }
+    .gallery-card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .cover-tag {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      background: var(--accent);
+      color: #111;
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 999px;
+    }
+    .gallery-card-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 4px;
+      padding: 6px;
+    }
+    .gallery-card-actions button {
+      flex: 1;
+      padding: 3px 4px;
+      font-size: 0.7rem;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      background: var(--elevated);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .gallery-card-actions button:hover {
+      border-color: var(--accent);
+    }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
     @media (max-width: 760px) {
       .topbar { position: static; padding: 12px 16px; }
       .wrap { padding: 18px 14px 60px; }
-      .grid-2, .grid-3, .crop-sliders { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4, .crop-sliders { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -252,7 +350,7 @@
         <div class="card">
           <h2 id="work-form-title">新增 / 编辑作品</h2>
           <input type="hidden" id="w-edit-id" />
-          <div class="grid-3">
+          <div class="grid-4">
             <div class="field">
               <label>所属文件夹</label>
               <select id="w-folder"></select>
@@ -267,6 +365,24 @@
             <div class="field">
               <label>制作年份（例如 2026）</label>
               <input id="w-year" type="text" placeholder="2026" />
+            </div>
+            <div class="field">
+              <label>制作月份（可选）</label>
+              <select id="w-month">
+                <option value="">不填（仅显示年份）</option>
+                <option value="01">01 月</option>
+                <option value="02">02 月</option>
+                <option value="03">03 月</option>
+                <option value="04">04 月</option>
+                <option value="05">05 月</option>
+                <option value="06">06 月</option>
+                <option value="07">07 月</option>
+                <option value="08">08 月</option>
+                <option value="09">09 月</option>
+                <option value="10">10 月</option>
+                <option value="11">11 月</option>
+                <option value="12">12 月</option>
+              </select>
             </div>
           </div>
 
@@ -309,18 +425,35 @@
             </div>
           </div>
 
+          <!-- 多图作品画廊管理（图片作品可一次选择多张上传，支持排序与切换封面） -->
+          <div id="gallery-manager-box" class="gallery-box">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <div>
+                <div style="font-size:0.86rem;font-weight:700;">多图作品画廊（可选：支持一次选择多张图片上传）</div>
+                <div style="font-size:0.76rem;color:var(--muted);">单张图片只需用上方封面图即可；如果这一件作品包含多张设定图/分镜图，可在此批量上传。</div>
+              </div>
+              <label class="btn btn-primary" style="margin:0;cursor:pointer;padding:6px 12px;font-size:0.8rem;">
+                + 批量上传多张图片
+                <input type="file" accept="image/*" multiple style="display:none;" onchange="uploadMultipleImagesToGitHub(this)" />
+              </label>
+            </div>
+            <div id="gallery-preview-grid" class="gallery-grid"></div>
+          </div>
+
           <div class="grid-3">
             <div class="field" id="duration-field" style="display:none;">
               <label>视频时长（例如 01:15）</label>
               <input id="w-duration" type="text" placeholder="01:00" />
             </div>
             <div class="field">
-              <label>标签（中文，用英文逗号分隔）</label>
-              <input id="w-tags-zh" type="text" placeholder="图片作品, 角色设定, 许愿塔" />
+              <label>标签（中文，用英文逗号分隔，或点下方已有标签）</label>
+              <input id="w-tags-zh" type="text" placeholder="图片作品, 角色设定, 许愿塔" oninput="renderTagBanks()" />
+              <div id="tag-bank-zh" class="tag-bank"></div>
             </div>
             <div class="field">
-              <label>标签（英文，用英文逗号分隔）</label>
-              <input id="w-tags-en" type="text" placeholder="Image, Character Design, Wishing Tower" />
+              <label>标签（英文，用英文逗号分隔，或点下方已有标签）</label>
+              <input id="w-tags-en" type="text" placeholder="Image, Character Design, Wishing Tower" oninput="renderTagBanks()" />
+              <div id="tag-bank-en" class="tag-bank"></div>
             </div>
           </div>
 
@@ -628,10 +761,153 @@
       try { sessionStorage.setItem('coco_admin_scroll', String(Math.round(window.scrollY))); } catch (e) {}
     }, { passive: true });
 
+    let formGalleryImages = [];
+
     function toggleMediaInputs() {
       const isVideo = document.getElementById('w-type').value === 'video';
       document.getElementById('video-url-field').style.display = isVideo ? 'flex' : 'none';
       document.getElementById('duration-field').style.display = isVideo ? 'flex' : 'none';
+      const gBox = document.getElementById('gallery-manager-box');
+      if (gBox) gBox.style.display = isVideo ? 'none' : 'block';
+    }
+
+    async function uploadMultipleImagesToGitHub(inputEl) {
+      const files = Array.from(inputEl.files || []);
+      if (files.length === 0) return;
+      const { owner, repo, token } = getAuth();
+      if (!owner || !repo || !token) {
+        showStatus('请先连接 GitHub 仓库再上传图片');
+        return;
+      }
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const safeName = `${Date.now()}_${i}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+        const path = `uploads/${safeName}`;
+        showStatus(`正在上传第 ${i + 1} / ${files.length} 张：${file.name} ...`, 20000);
+        try {
+          const base64Data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+          const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: 'application/vnd.github+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              message: `Upload gallery image ${safeName}`,
+              content: base64Data
+            })
+          });
+          if (!res.ok) throw new Error(`上传 ${file.name} 失败`);
+          const rel = `./${path}`;
+          formGalleryImages.push(rel);
+          if (!document.getElementById('w-cover').value.trim()) {
+            document.getElementById('w-cover').value = rel;
+            updateBannerCropPreview();
+          }
+          renderFormGallery();
+        } catch (err) {
+          showStatus('上传出错：' + err.message, 5000);
+        }
+      }
+      inputEl.value = '';
+      showStatus(`已完成 ${files.length} 张图片上传！记得点「添加到作品列表」并保存到线上。`, 4500);
+    }
+
+    function renderFormGallery() {
+      const grid = document.getElementById('gallery-preview-grid');
+      if (!grid) return;
+      if (formGalleryImages.length === 0) {
+        grid.innerHTML = '';
+        return;
+      }
+      const curCover = document.getElementById('w-cover').value.trim();
+      grid.innerHTML = formGalleryImages.map((url, idx) => {
+        const isCover = curCover === url;
+        return `
+          <div class="gallery-card ${isCover ? 'is-cover' : ''}">
+            <div class="gallery-card-img">
+              <img src="${resolvePreviewUrl(url)}" alt="" />
+              ${isCover ? '<span class="cover-tag">封面</span>' : ''}
+            </div>
+            <div class="gallery-card-actions">
+              <button type="button" onclick="moveGalleryImg(${idx}, -1)" title="前移">←</button>
+              <button type="button" onclick="setGalleryCover(${idx})" title="设为封面">封面</button>
+              <button type="button" onclick="moveGalleryImg(${idx}, 1)" title="后移">→</button>
+              <button type="button" onclick="removeGalleryImg(${idx})" title="移除" style="color:#fca5a5;">×</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function moveGalleryImg(idx, delta) {
+      const next = idx + delta;
+      if (next < 0 || next >= formGalleryImages.length) return;
+      [formGalleryImages[idx], formGalleryImages[next]] = [formGalleryImages[next], formGalleryImages[idx]];
+      renderFormGallery();
+    }
+
+    function setGalleryCover(idx) {
+      const url = formGalleryImages[idx];
+      if (!url) return;
+      document.getElementById('w-cover').value = url;
+      updateBannerCropPreview();
+      renderFormGallery();
+    }
+
+    function removeGalleryImg(idx) {
+      formGalleryImages.splice(idx, 1);
+      renderFormGallery();
+    }
+
+    function parseTagList(str) {
+      return String(str || '').split(/[,，]/).map(s => s.trim()).filter(Boolean);
+    }
+
+    function renderTagBanks() {
+      if (!siteData) return;
+      ['zh', 'en'].forEach(lang => {
+        const container = document.getElementById(`tag-bank-${lang}`);
+        const inputEl = document.getElementById(`w-tags-${lang}`);
+        if (!container || !inputEl) return;
+
+        const allTags = [];
+        (siteData.items || []).forEach(item => {
+          (item.tags?.[lang] || []).forEach(t => {
+            const clean = String(t).trim();
+            if (clean && !allTags.includes(clean)) allTags.push(clean);
+          });
+        });
+
+        if (allTags.length === 0) {
+          container.innerHTML = '';
+          return;
+        }
+        const selected = parseTagList(inputEl.value);
+        container.innerHTML = `<span class="tag-bank-label">已有标签（点击添加/取消）：</span>` + allTags.map(tag => {
+          const isSel = selected.includes(tag);
+          const encoded = encodeURIComponent(tag);
+          return `<button type="button" class="tag-pill-choice ${isSel ? 'selected' : ''}" onclick="toggleExistingTag('${lang}', decodeURIComponent('${encoded}'))">${isSel ? '✓ ' : '+ '}${tag}</button>`;
+        }).join('');
+      });
+    }
+
+    function toggleExistingTag(lang, tag) {
+      const inputEl = document.getElementById(`w-tags-${lang}`);
+      if (!inputEl) return;
+      const list = parseTagList(inputEl.value);
+      const idx = list.indexOf(tag);
+      if (idx >= 0) list.splice(idx, 1);
+      else list.push(tag);
+      inputEl.value = list.join(', ');
+      renderTagBanks();
     }
 
     function renderAll() {
@@ -672,7 +948,7 @@
                 <div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">
                   <span class="badge">${folderName}</span>
                   ${isFeatured ? '<span class="badge">顶部 Banner</span>' : ''}
-                  ${item.year || ''} · ${item.type === 'video' ? '视频' : '图片'}
+                  ${item.year || ''}${item.month ? '.' + String(item.month).padStart(2, '0') : ''} · ${item.type === 'video' ? '视频' : (Array.isArray(item.images) && item.images.length > 1 ? `图片(${item.images.length}张)` : '图片')}
                 </div>
               </div>
             </div>
@@ -720,9 +996,10 @@
           `;
         }).join('');
 
-      // 填充首页快捷链接
+      // 填充首页快捷链接 & 刷新已有标签选择池
       document.getElementById('link-showreel').value = siteData.showreelUrl || '';
       document.getElementById('link-resume').value = siteData.resumePdfUrl || '';
+      renderTagBanks();
     }
 
     function submitWorkForm() {
@@ -732,15 +1009,24 @@
       const titleZh = document.getElementById('w-title-zh').value.trim();
       if (!titleZh) { showStatus('请填写作品中文标题'); return; }
 
+      const finalImages = type === 'image' ? formGalleryImages.slice() : [];
+      if (type === 'image' && cover && finalImages.length > 0 && !finalImages.includes(cover)) {
+        finalImages.unshift(cover);
+      }
+      const effectiveCover = cover || finalImages[0] || '';
+      const monthVal = document.getElementById('w-month').value.trim();
+
       const newObj = {
         id: editId || ('w_' + Date.now()),
         folder: document.getElementById('w-folder').value,
         type,
         duration: type === 'video' ? (document.getElementById('w-duration').value.trim() || '00:30') : undefined,
         year: document.getElementById('w-year').value.trim() || '2026',
+        month: monthVal || '',
         color: '#2bc0a9',
-        coverUrl: cover,
-        imageUrl: type === 'image' ? cover : '',
+        coverUrl: effectiveCover,
+        imageUrl: type === 'image' ? effectiveCover : '',
+        images: finalImages,
         videoUrl: type === 'video' ? document.getElementById('w-video').value.trim() : '',
         bannerPosition: `${document.getElementById('w-banner-x').value}% ${document.getElementById('w-banner-y').value}%`,
         bannerZoom: Number((Number(document.getElementById('w-banner-zoom').value) / 100).toFixed(2)),
@@ -753,8 +1039,8 @@
           en: document.getElementById('w-desc-en').value.trim() || document.getElementById('w-desc-zh').value.trim()
         },
         tags: {
-          zh: document.getElementById('w-tags-zh').value.split(',').map(s => s.trim()).filter(Boolean),
-          en: document.getElementById('w-tags-en').value.split(',').map(s => s.trim()).filter(Boolean)
+          zh: parseTagList(document.getElementById('w-tags-zh').value),
+          en: parseTagList(document.getElementById('w-tags-en').value)
         }
       };
 
@@ -783,6 +1069,9 @@
       document.getElementById('w-type').value = item.type;
       toggleMediaInputs();
       document.getElementById('w-year').value = item.year || '';
+      document.getElementById('w-month').value = item.month ? String(item.month).padStart(2, '0') : '';
+      formGalleryImages = Array.isArray(item.images) ? item.images.slice() : [];
+      renderFormGallery();
       document.getElementById('w-title-zh').value = item.title.zh || '';
       document.getElementById('w-title-en').value = item.title.en || '';
       document.getElementById('w-desc-zh').value = item.desc.zh || '';
@@ -792,6 +1081,7 @@
       document.getElementById('w-duration').value = item.duration || '';
       document.getElementById('w-tags-zh').value = (item.tags?.zh || []).join(', ');
       document.getElementById('w-tags-en').value = (item.tags?.en || []).join(', ');
+      renderTagBanks();
       document.getElementById('w-featured').checked = (siteData.featuredWorkIds || []).includes(item.id);
       const posParts = (item.bannerPosition || '50% 50%').replace(/%/g, '').trim().split(/\s+/);
       document.getElementById('w-banner-x').value = Number.isFinite(Number(posParts[0])) ? Number(posParts[0]) : 50;
@@ -813,6 +1103,10 @@
     function resetWorkForm() {
       ['w-edit-id','w-year','w-title-zh','w-title-en','w-desc-zh','w-desc-en','w-cover','w-video','w-duration','w-tags-zh','w-tags-en']
         .forEach(id => document.getElementById(id).value = '');
+      document.getElementById('w-month').value = '';
+      formGalleryImages = [];
+      renderFormGallery();
+      renderTagBanks();
       document.getElementById('w-featured').checked = false;
       resetBannerCrop();
       toggleBannerCropBox();
