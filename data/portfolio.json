@@ -194,6 +194,76 @@
   },
   "items": [
     {
+      "id": "w_1795684012983",
+      "folder": "anim-practice",
+      "type": "video",
+      "duration": "00:27",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795684009960_maria_front_walk.png",
+      "imageUrl": "",
+      "videoUrl": "【正面走路动画练习】 https://www.bilibili.com/video/BV1hBxk6qEKL/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "正面走路循环",
+        "en": "Front view Walk Cycle"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "练习",
+          "Harmony"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "Practice",
+          "Harmony"
+        ]
+      }
+    },
+    {
+      "id": "w_1795683909262",
+      "folder": "anim-practice",
+      "type": "video",
+      "duration": "00:25",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795683901768_seagull_walk.png",
+      "imageUrl": "",
+      "videoUrl": "【一只走路的海鸥】 https://www.bilibili.com/video/BV1NpaG6ZECg/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "海鸥走路循环",
+        "en": "Seagull Walk Cycle"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "练习",
+          "Harmony"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "Practice",
+          "Harmony"
+        ]
+      }
+    },
+    {
       "id": "w_1795683755441",
       "folder": "anim-practice",
       "type": "video",
