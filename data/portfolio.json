@@ -194,6 +194,41 @@
   },
   "items": [
     {
+      "id": "w_1795683755441",
+      "folder": "anim-practice",
+      "type": "video",
+      "duration": "00:10",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795683636964_gif_alexander.png",
+      "imageUrl": "",
+      "videoUrl": "【三个半小时给oc酱画个逐帧动图】 https://www.bilibili.com/video/BV1T9LDzVENw/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "GIF 循环",
+        "en": "GIF cycle"
+      },
+      "desc": {
+        "zh": "Alexander",
+        "en": "Alexander"
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "练习",
+          "Procreate"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "Practice",
+          "Procreate"
+        ]
+      }
+    },
+    {
       "id": "w_1795683355783",
       "folder": "anim-personal",
       "type": "video",
