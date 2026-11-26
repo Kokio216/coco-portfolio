@@ -41,9 +41,9 @@
       "children": [
         "anim-personal",
         "anim-collab",
+        "folder_1795604111688",
         "anim-practice",
-        "anim-rigging",
-        "folder_1795604111688"
+        "anim-rigging"
       ]
     },
     "anim-personal": {
@@ -132,8 +132,7 @@
       },
       "children": [
         "wt-scene",
-        "wt-char",
-        "wt-more"
+        "wt-char"
       ]
     },
     "wt-scene": {
@@ -161,20 +160,6 @@
       "desc": {
         "zh": "《许愿塔》主角团、NPC 与首领立绘设定、三视图及表情差分",
         "en": "Main cast, NPCs, and boss concept sheets, turnarounds, and expression sets"
-      },
-      "children": []
-    },
-    "wt-more": {
-      "id": "wt-more",
-      "depth": 3,
-      "parent": "game-wishing-tower",
-      "name": {
-        "zh": "更多设定（待补充）",
-        "en": "Additional Assets (Expandable)"
-      },
-      "desc": {
-        "zh": "预留给《许愿塔》省略号（...）下的扩展子文件夹，可根据您的具体需求定制",
-        "en": "Reserved subfolder for props, UI, VFX, or lore under \"Wishing Tower\""
       },
       "children": []
     },
@@ -208,6 +193,68 @@
     }
   },
   "items": [
+    {
+      "id": "w_1795683355783",
+      "folder": "anim-personal",
+      "type": "video",
+      "duration": "00:44",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795683292264_first_animation.png",
+      "imageUrl": "",
+      "videoUrl": "【【OC】原创2D逐帧动画】 https://www.bilibili.com/video/BV11mfgYoEuM/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "我的第一个动画作品",
+        "en": "My first animation work"
+      },
+      "desc": {
+        "zh": "给oc画的小动画",
+        "en": "for my original character Alexander"
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "AN"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "AN"
+        ]
+      }
+    },
+    {
+      "id": "w_1795683069732",
+      "folder": "folder_1795604111688",
+      "type": "video",
+      "duration": "01:25",
+      "year": "2026",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795682930526_she_who_runs.png",
+      "imageUrl": "",
+      "videoUrl": "【原创动态分镜！\"She Who Runs\"】 https://www.bilibili.com/video/BV1d6oUBBEbz/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "\"She Who Runs\" 原创分镜",
+        "en": "\"She Who Runs\" Original Animatic"
+      },
+      "desc": {
+        "zh": "Maria的噩梦。",
+        "en": "Maria's nightmare."
+      },
+      "tags": {
+        "zh": [
+          "动态分镜"
+        ],
+        "en": [
+          "Animatic"
+        ]
+      }
+    },
     {
       "id": "w_1795604292322",
       "folder": "anim-personal",
