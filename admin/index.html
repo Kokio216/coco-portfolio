@@ -198,7 +198,9 @@
       border-radius: 7px;
     }
     @media (max-width: 760px) {
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .topbar { position: static; padding: 12px 16px; }
+      .wrap { padding: 18px 14px 60px; }
+      .grid-2, .grid-3, .crop-sliders { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -240,9 +242,9 @@
     <!-- 2. 主管理区域 -->
     <div id="manager-area" style="display:none;">
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('works', this)">作品管理</button>
-        <button class="tab-btn" onclick="switchTab('folders', this)">文件夹管理</button>
-        <button class="tab-btn" onclick="switchTab('links', this)">作品集合集 & 简历 PDF</button>
+        <button class="tab-btn active" id="tab-btn-works" onclick="switchTab('works', this)">作品管理</button>
+        <button class="tab-btn" id="tab-btn-folders" onclick="switchTab('folders', this)">文件夹管理</button>
+        <button class="tab-btn" id="tab-btn-links" onclick="switchTab('links', this)">作品集合集 & 简历 PDF</button>
       </div>
 
       <!-- Tab 1: 作品管理 -->
@@ -513,6 +515,7 @@
         document.getElementById('conn-state').style.color = 'var(--accent)';
         document.getElementById('manager-area').style.display = 'block';
         renderAll();
+        restoreAdminPosition();
         showStatus('已成功加载线上作品数据！');
       } catch (err) {
         showStatus('连接出错：' + err.message, 5000);
@@ -591,12 +594,39 @@
       reader.readAsDataURL(file);
     }
 
-    function switchTab(name, btn) {
+    function switchTab(name, btn, updateHash = true) {
+      const valid = ['works', 'folders', 'links'].includes(name) ? name : 'works';
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(`panel-${name}`).classList.add('active');
+      const targetBtn = btn || document.getElementById(`tab-btn-${valid}`);
+      if (targetBtn) targetBtn.classList.add('active');
+      const targetPanel = document.getElementById(`panel-${valid}`);
+      if (targetPanel) targetPanel.classList.add('active');
+      try {
+        sessionStorage.setItem('coco_admin_tab', valid);
+        if (updateHash && window.location.hash !== `#${valid}`) {
+          history.replaceState(null, '', `#${valid}`);
+        }
+      } catch (e) {}
     }
+
+    function restoreAdminPosition() {
+      let targetTab = (window.location.hash || '').replace(/^#/, '');
+      if (!['works', 'folders', 'links'].includes(targetTab)) {
+        try { targetTab = sessionStorage.getItem('coco_admin_tab') || 'works'; } catch (e) { targetTab = 'works'; }
+      }
+      switchTab(targetTab, null, false);
+      try {
+        const savedScroll = Number(sessionStorage.getItem('coco_admin_scroll') || 0);
+        if (savedScroll > 0) {
+          requestAnimationFrame(() => window.scrollTo(0, savedScroll));
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('scroll', () => {
+      try { sessionStorage.setItem('coco_admin_scroll', String(Math.round(window.scrollY))); } catch (e) {}
+    }, { passive: true });
 
     function toggleMediaInputs() {
       const isVideo = document.getElementById('w-type').value === 'video';

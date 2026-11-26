@@ -715,6 +715,38 @@
       display: block;
     }
 
+    /* 窄屏与手机端顶栏内的紧凑社交账号圆形图标（宽屏隐藏，手机/平板显示在顶栏） */
+    .nav-mobile-socials {
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-social-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .nav-social-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .nav-social-btn svg {
+      width: 17px;
+      height: 17px;
+      display: block;
+    }
+
     /* ================= 作品集顶部横跨屏幕轮播 BANNER ================= */
     .portfolio-banner {
       width: 100vw;
@@ -1438,48 +1470,244 @@
     /* 响应式设计 */
     @media (max-width: 1460px) {
       .social-column {
-        position: static;
-        margin-top: 28px;
+        display: none;
       }
-      .social-logos {
-        flex-direction: row;
-        justify-content: flex-end;
+      .nav-mobile-socials {
+        display: inline-flex;
       }
     }
 
     @media (max-width: 960px) {
+      /* 手机/平板端顶栏不持续置顶，仅停留在页面最顶部 */
+      .navbar {
+        position: static;
+        padding: 12px 16px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .brand-group {
+        width: 100%;
+        justify-content: space-between;
+        gap: 6px;
+      }
+      .brand {
+        font-size: 0.98rem;
+        gap: 8px;
+      }
+      .brand-email {
+        font-size: 0.72rem;
+      }
+      .nav-center {
+        padding: 3px;
+      }
+      .nav-tab {
+        padding: 6px 18px;
+        font-size: 0.84rem;
+      }
+      .nav-controls {
+        gap: 8px;
+        margin-left: auto;
+      }
+      .control-btn {
+        font-size: 0.73rem;
+        padding: 4px 10px;
+        height: 30px;
+      }
+      .lang-pill {
+        height: 30px;
+      }
+      .lang-half {
+        font-size: 0.72rem;
+      }
+      .nav-social-btn {
+        width: 30px;
+        height: 30px;
+      }
+      .container {
+        padding: 24px 16px 56px;
+      }
       .hero-banner {
         grid-template-columns: 1fr;
         align-items: start;
+        gap: 20px;
+        padding-bottom: 28px;
+        margin-bottom: 24px;
+      }
+      .hero-eyebrow {
+        font-size: 0.72rem;
+        padding: 4px 10px;
+        margin-bottom: 10px;
+      }
+      .hero-title {
+        font-size: clamp(2.5rem, 11vw, 3.2rem);
+        margin-bottom: 10px;
+      }
+      .hero-subtitle {
+        font-size: 0.88rem;
+        line-height: 1.58;
       }
       .hero-cta-box {
         align-items: flex-start;
+        gap: 10px;
+      }
+      .cta-jump-btn {
+        padding: 13px 22px;
+        font-size: 0.92rem;
+        gap: 10px;
+      }
+      .cta-hint {
+        font-size: 0.76rem;
       }
       .hero-placeholder-actions {
         justify-content: flex-start;
+      }
+      .placeholder-pill-btn {
+        font-size: 0.74rem;
+        padding: 5px 11px;
       }
       .placeholder-toast {
         text-align: left;
       }
       .home-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
       }
-      .explorer-layout {
-        grid-template-columns: 1fr;
+      .info-card {
+        padding: 20px;
+        border-radius: 16px;
       }
-      .folder-sidebar {
-        position: static;
+      .card-title {
+        font-size: 1.12rem;
+        margin-bottom: 12px;
       }
-      .navbar {
-        padding: 14px 20px;
-        flex-wrap: wrap;
-        gap: 12px;
+      .card-body,
+      .about-point {
+        font-size: 0.84rem;
+        gap: 10px;
       }
-      .banner-caption-bar {
-        padding: 20px 24px 16px;
+      .exp-metric-chip {
+        font-size: 0.75rem;
+        padding: 5px 9px;
+      }
+      .work-item {
+        padding: 9px 11px;
+      }
+      .work-item-title {
+        font-size: 0.86rem;
+      }
+      .work-item-desc {
+        font-size: 0.76rem;
+      }
+      .soft-tag {
+        font-size: 0.78rem;
+        padding: 5px 10px;
+      }
+      .card-footer-note {
+        font-size: 0.74rem;
+        margin-top: 16px;
+        padding-top: 11px;
       }
       .home-vibe-footnote {
         text-align: left;
+        font-size: 0.73rem;
+        margin-top: 18px;
+      }
+      /* 作品集页面移动端适配 */
+      .portfolio-banner {
+        margin-top: -24px;
+        margin-bottom: 20px;
+        height: 22vh;
+        min-height: 155px;
+        max-height: 210px;
+      }
+      .portfolio-banner:hover {
+        height: 25vh;
+        min-height: 175px;
+        max-height: 240px;
+      }
+      .banner-trapezoid.left {
+        width: 13vw;
+        min-width: 42px;
+      }
+      .banner-trapezoid.right {
+        width: 11vw;
+        min-width: 36px;
+      }
+      .banner-caption-bar {
+        padding: 16px 16px 12px;
+      }
+      .banner-work-title {
+        font-size: 0.94rem;
+      }
+      .banner-jump-hint {
+        display: none;
+      }
+      .banner-arrow {
+        width: 34px;
+        height: 34px;
+        font-size: 1.1rem;
+      }
+      .banner-arrow.prev { left: 10px; }
+      .banner-arrow.next { right: 10px; }
+      .explorer-header {
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .breadcrumb-bar {
+        padding: 8px 12px;
+        font-size: 0.82rem;
+      }
+      .filter-chip,
+      .sort-toggle-btn {
+        padding: 6px 10px;
+        font-size: 0.76rem;
+      }
+      .explorer-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .folder-sidebar {
+        position: static;
+        padding: 16px;
+      }
+      .explorer-stage {
+        padding: 16px;
+        min-height: 320px;
+        gap: 18px;
+      }
+      .folder-card {
+        padding: 14px 16px;
+      }
+      .folder-name {
+        font-size: 0.96rem;
+      }
+      .folder-meta {
+        font-size: 0.78rem;
+      }
+      .works-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+      .modal-backdrop {
+        padding: 12px;
+      }
+      .modal-content {
+        padding: 16px;
+      }
+    }
+
+    /* 触摸屏设备（无鼠标悬浮）：直接显示 Banner 标题与左右切换箭头，方便手机浏览 */
+    @media (hover: none) {
+      .banner-caption-bar {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .banner-arrow {
+        opacity: 0.82;
+        pointer-events: auto;
+      }
+      .banner-dark-mask {
+        opacity: 0.22;
       }
     }
   </style>
@@ -1508,6 +1736,20 @@
     </nav>
 
     <div class="nav-controls">
+      <!-- 手机与窄屏顶栏中的社交账号入口 -->
+      <div class="nav-mobile-socials" aria-label="社交账号">
+        <a class="nav-social-btn" href="https://b23.tv/sevMrym" target="_blank" rel="noopener noreferrer" title="Bilibili" aria-label="Bilibili">
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386z"/>
+          </svg>
+        </a>
+        <a class="nav-social-btn" href="https://xhslink.com/m/2cqGdlqldP6" target="_blank" rel="noopener noreferrer" title="小红书" aria-label="小红书">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:21px;height:21px;">
+            <text x="24" y="29" text-anchor="middle" fill="currentColor" font-size="13.5" font-weight="800" font-family="'Noto Sans SC', sans-serif" letter-spacing="-0.5">小红书</text>
+          </svg>
+        </a>
+      </div>
+
       <!-- 语言切换按键：长条椭圆 + 斜线切割 + 当前语言高亮显示 -->
       <button class="lang-pill" onclick="toggleLanguage()" id="lang-toggle-btn" aria-label="切换语言">
         <span class="lang-half zh-part active" id="lang-opt-zh">中文</span>
@@ -2506,7 +2748,13 @@
     function restoreStateFromUrl() {
       try {
         const savedLang = localStorage.getItem('coco_lang');
-        if (savedLang === 'zh' || savedLang === 'en') currentLang = savedLang;
+        if (savedLang === 'zh' || savedLang === 'en') {
+          currentLang = savedLang;
+        } else {
+          // 首次访问自动根据访客设备/浏览器默认语言选择中文或英文
+          const deviceLang = (navigator.languages && navigator.languages[0]) || navigator.language || 'zh';
+          currentLang = String(deviceLang).toLowerCase().startsWith('zh') ? 'zh' : 'en';
+        }
         const savedTheme = localStorage.getItem('coco_theme');
         if (savedTheme === 'light-grey') document.documentElement.setAttribute('data-theme', 'light-grey');
       } catch (e) {}
