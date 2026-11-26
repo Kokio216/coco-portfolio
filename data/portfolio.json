@@ -194,6 +194,40 @@
   },
   "items": [
     {
+      "id": "w_1795684358457",
+      "folder": "anim-personal",
+      "type": "video",
+      "duration": "00:10",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795684350003_flipbook.png",
+      "imageUrl": "",
+      "videoUrl": "【大一翻页动画作业】 https://www.bilibili.com/video/BV16mfBYhEBA/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "Coco's Flipbook",
+        "en": "Coco's Flipbook"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "Dragonframe"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "on paper",
+          "Dragonframe"
+        ]
+      }
+    },
+    {
       "id": "w_1795684012983",
       "folder": "anim-practice",
       "type": "video",
