@@ -175,7 +175,10 @@
         "zh": "日常插画、色彩速涂、概念草图与视觉实验（暂无子文件夹细分）",
         "en": "Standalone illustrations, color studies, sketches, and visual experiments"
       },
-      "children": []
+      "children": [
+        "folder_1795684458825",
+        "folder_1795684499643"
+      ]
     },
     "folder_1795604111688": {
       "id": "folder_1795604111688",
@@ -190,9 +193,70 @@
         "en": "Animatics, not polished animation"
       },
       "children": []
+    },
+    "folder_1795684458825": {
+      "id": "folder_1795684458825",
+      "depth": 2,
+      "parent": "personal",
+      "name": {
+        "zh": "同人创作",
+        "en": "Fanart"
+      },
+      "desc": {
+        "zh": "各类型的同人作品",
+        "en": "Just Fanart"
+      },
+      "children": []
+    },
+    "folder_1795684499643": {
+      "id": "folder_1795684499643",
+      "depth": 2,
+      "parent": "personal",
+      "name": {
+        "zh": "原创个人作品",
+        "en": "Original Personal Works"
+      },
+      "desc": {
+        "zh": "原创",
+        "en": "original"
+      },
+      "children": []
     }
   },
   "items": [
+    {
+      "id": "w_1795684875897",
+      "folder": "folder_1795684458825",
+      "type": "video",
+      "duration": "02:47",
+      "year": "2025",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795684746277_hugo_pmv.png",
+      "imageUrl": "",
+      "videoUrl": "【雨果生贺手书—《荣耀向我俯首》】 https://www.bilibili.com/video/BV1RFbxzJE5n/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "绝区零雨果生贺手书",
+        "en": "ZZZ Hugo PMV"
+      },
+      "desc": {
+        "zh": "音乐《荣耀向我俯首》来自音乐剧《红与黑》",
+        "en": "Music \"La gloire à mes genoux\" from musical \"Le rouge et le noir\""
+      },
+      "tags": {
+        "zh": [
+          "手书",
+          "同人",
+          "绝区零"
+        ],
+        "en": [
+          "Fanart",
+          "PMV",
+          "ZZZ"
+        ]
+      }
+    },
     {
       "id": "w_1795684358457",
       "folder": "anim-personal",
