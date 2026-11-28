@@ -286,6 +286,43 @@
   },
   "items": [
     {
+      "id": "w_1795853810162",
+      "folder": "anim-practice",
+      "type": "video",
+      "duration": "00:34",
+      "year": "2026",
+      "month": "11",
+      "color": "#2bc0a9",
+      "coverUrl": "./uploads/1795853801650_limp_walk.png",
+      "imageUrl": "",
+      "images": [],
+      "videoUrl": "【跛脚走路动画练习】 https://www.bilibili.com/video/BV1mj1MzYE2Y/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
+      "bannerPosition": "50% 50%",
+      "bannerZoom": 1,
+      "title": {
+        "zh": "跛脚走路练习",
+        "en": "Limp Walk Cycle"
+      },
+      "desc": {
+        "zh": "",
+        "en": ""
+      },
+      "tags": {
+        "zh": [
+          "2D",
+          "手绘",
+          "练习",
+          "Harmony"
+        ],
+        "en": [
+          "2D",
+          "Hand-drawn",
+          "Harmony",
+          "Practice"
+        ]
+      }
+    },
+    {
       "id": "w_1795684875897",
       "folder": "folder_1795684458825",
       "type": "video",
