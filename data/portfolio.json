@@ -2,6 +2,7 @@
   "showreelUrl": "",
   "resumePdfUrl": "",
   "featuredWorkIds": [
+    "w_1795684012983",
     "w_1795604292322",
     "w_1795603845523",
     "w_1795603117092",
@@ -405,7 +406,7 @@
       "imageUrl": "",
       "images": [],
       "videoUrl": "【正面走路动画练习】 https://www.bilibili.com/video/BV1hBxk6qEKL/?share_source=copy_web&vd_source=81e8cd9734249f387776dd8eec11d383",
-      "bannerPosition": "50% 50%",
+      "bannerPosition": "50% 28%",
       "bannerZoom": 1,
       "title": {
         "zh": "正面走路循环",
